@@ -4,19 +4,19 @@
 
 ### Commonly Used Java Libraries
 
-Utility - Collections, IO, Loggers functionlaities
+- Utility - Collections, IO, Loggers functionlaities
 
-Distributed system libs - networking libs help in setting clients and servers for various protocols like http, http2, sockets.
+- Distributed system libs - networking libs help in setting clients and servers for various protocols like http, http2, sockets.
 
-Akka implements the actor model of concurrency for building highly concurrent applications without headaches that concurrent modelling gives. (can distribute actors and can run on single machine also)
+- Akka implements the actor model of concurrency for building highly concurrent applications without headaches that concurrent modelling gives. (can distribute actors and can run on single machine also)
 
-Rx Java - Reactive programming . composing streams of events
+- Rx Java - Reactive programming . composing streams of events
 
-Apache camel is for connecting system to new workflows. so make integration easy
+- Apache camel is for connecting system to new workflows. so make integration easy
 
-DATA ACCESS LIBS - to get data to and from DB (relational)
+- DATA ACCESS LIBS - to get data to and from DB (relational)
 
-DATA PROCESSING LIBS - BIG DATA
+- DATA PROCESSING LIBS - BIG DATA
 apache hadoop - process petabytes of data on clusters running many instances of Hadoop.
 Spark - used to process stream of data very fast rather than processing in batches which usually is the case with hadoop.
 Both are a distributed system
@@ -59,15 +59,17 @@ provides null safety, also compiles to javascript, i.e can be run in browser. i.
 eclipse , intelliJ
 
 ### Build tools 
-They are to define repeatable builds. , managing multiple modules, managing external dependencies(download them automatically), running tests. Some build tool expect specific directory structure. Tools example - Maven and gradle.
-The pom.xml will have all information (i.e. dependencies and repositories and packaging information) to build your project. A build tool gets dependencies from the repositories specified in pom.xml located in your project or settings.xml located in /.m2 directory.
-Then creates an executable on basis of packaging information in pom.xml, and runs unit test cases.
+They are used to build and manage projects. Their job comprises of managing multiple modules, managing external dependencies(download them automatically), running tests. Some build tool expect specific directory structure. 
+
+Example of build tools - Maven and gradle.
+
+The pom.xml will have all information (i.e. dependencies and repositories and packaging information) to build your project. A build tool gets dependencies from the repositories specified in pom.xml located in your project or settings.xml located in /.m2 directory. Then creates an executable on basis of packaging information in pom.xml, and runs unit test cases.
 
 ### CI server 
 It is a server where code build and deployment happens automatically. WE tell it our git repo and after how many commits it should deploy and it automatically deploys to told ips of servers, the code that it builds . So Ci Server gets code , builds it using build tools , run tests and analyse code , deploy code. In all it is to check that you get code of a particular quality. Eg jenkins.
 
 What is continuos integration - 
-Link for jenkins - https://www.edureka.co/blog/what-is-jenkins/
+[Link for jenkins] (https://www.edureka.co/blog/what-is-jenkins/)
 
 ### Static code analysis 
 Checkstyle, spotbugs. PMD - check compiled bytecode.  You tell your coding standards and programming practises to these tools and they do these analysis.
@@ -96,9 +98,8 @@ Do Modern java action
 2) runtime environment (Config, Security, threading, I/O)-
 RUNTIME ENVIRONMENT - A runtime environment, primarily implements portions of an execution model. This is not to be confused with the runtime lifecycle phase of a program, during which the runtime system is in operation. Most languages have some form of runtime system that provides an environment in which programs run. This environment may address a number of issues including the layout of application memory, how the program accesses variables, mechanisms for passing parameters between procedures, interfacing with the operating system, and otherwise. The compiler makes assumptions depending on the specific runtime system to generate correct code. Typically the runtime system will have some responsibility for setting up and managing the stack and heap, and may include features such as garbage collection, threads or other dynamic features built into the language.
 
-
 Java is so flexible that there are even more runtimes than java SE provided by oracle that support same java lang.
-1) Java SE - standar edition
+1) Java SE - standard edition
                            - Java EE
                            - Java ME
                            - JavaFX
@@ -117,7 +118,7 @@ JDK is installed by developers to produce the app.
 JDK installation includes JRE
 xyz.java -> JDK - > Java App -> JRE -> Host environment (Mac , windows, browser , android)
 
-https://www.geeksforgeeks.org/differences-jdk-jre-jvm/
+(https://www.geeksforgeeks.org/differences-jdk-jre-jvm/)
 
 -----------------------------------------
 Creating a Simple App: Introducing Packages
@@ -223,72 +224,74 @@ public class BaseClass {
 
 }
 public class Derived extends BaseClass {
-	public void derivedClassMethod(){
-  
-	}
-  
+    public void derivedClassMethod() {
+
+    }
+
 }
 
 BaseClass anInstance = new Derived();
-anInstance.derivedClassMethod(); 
+anInstance.derivedClassMethod();
 ```
 Doesn’t work as we can only access method that are visible to the reference type.
-NOTE - Don’t confuse it with  overridden methods.
+**NOTE -** Don’t confuse it with  overridden methods.
 
 ```java
 public class BaseClass {
-	public void baseclassmethod(){
-	}
+    public void baseclassmethod() {}
 }
 public class Derived extends BaseClass {
 
 }
 
-Derived derivedObject = new Derived ();
-derivedObject.baseclassmethod();  
+Derived derivedObject = new Derived();
+derivedObject.baseclassmethod();
 ```
-This can happen as it has inherited things of parent .
+This is valid as the derived class has inherited things of parent .
+
 
 ### Member Hiding and Overriding
 Member hiding: 
 
-Overriding: If methods of same signature (Method  Signature means method name and parameters.) are there in parent and derived Classes, then the method of Derived Class overrides method of BaseClass.
+Overriding: If methods of same signature (Method Signature means method name and parameters.) are there in parent and derived Classes, then the method of Derived Class overrides method of BaseClass.
 
 ```java
 public class BaseClass {
-	int x = 10;
-	public int method(){
+    int x = 10;
+    public int method() {
 
-	}
+    }
 }
 public class Derived extends BaseClass {
-	int x = 5;
-	public int method(){
+    int x = 5;
+    public int method() {
 
-	}
+    }
 }
 
-So for eg:	BaseClass obj = new DerivedClass();
-
+BaseClass obj = new DerivedClass();
 obj.x;
 obj.method();
 ```
 
-If a reference type is of the BaseClass then field used is of BaseClass because fields of BaseClass hides the fields of derived class. This may be dangerous.
+If a reference type is of the BaseClass then field accessed is of BaseClass because fields of BaseClass hides the fields of derived class. This may be dangerous.
 But a reference of BaseClass references object of a Derived Class then methods used are of derived class because methods are overridden.
 
-So fields depends on reference types and method depends on the constructor used i.e the type of object the reference is pointing to.
+**:bulb: So field accessed depends on reference type used whereas method depends on the constructor used i.e the type of object the reference is pointing to.**
 
 ### Object Class
+Object class is base class in java. By default all classes extend this Object class.
+
 ```java
-Object - base class in java
 Object o = new CargoFlight();
-o.add1Package(1.0, 2.5, 3.0); - doesnt work as o reference of Object type doesn't know addPackage.
+o.add1Package(1.0, 2.5, 3.0); 		//doesnt work as o reference of Object type doesn't know addPackage.
+
 CargoFlight cf = (CargoFlight) o;
-cf.add1Package(1.0, 2.5, 3.0) - runs
+cf.add1Package(1.0, 2.5, 3.0) 		//This runs
+
 if (o instance of CargoFlight) {
-CargoFlight cf = (CargoFlight) o ;
-cf.add1PAckage(1.9, 2.5, 3.0);
+    CargoFlight cf = (CargoFlight) o;
+    cf.add1PAckage(1.9, 2.5, 3.0);
 }
 ```
 
@@ -301,30 +304,37 @@ toString Return string of chars representing the current instance
 equals - Compare another object to current instance for equality
 
 
-### Equality
+### Equality Of Objects
 ```java
 Flight f1 = new Flight(175);
 Flight f2 = new Flight(175);
-f1 == f2 -> return false (as reference are checked to be equal)
-f1.equals(f2) -> return false (as reference are checked to be equal)
-So now we want method equal to behave differently. So we override it.
+f1 == f2 	- > 	return false(as reference are checked to be equal)
+f1.equals(f2) 	- >	return false(as reference are checked to be equal)
+```
+
+But now we want equal() method to behave differently. So we override it.
+```java
 class Flight {
-private int flightNumber;
-private char flightClass;
-@Override
-public boolean equals (Object o) {
-/ o doesnt have access to fields of Flight as it is Object type. So we will typecase it so that it can access fields of Flight./
-Flight other = (Flight) o;
-return flightNumver == other.flightNumber && flightClass == other.flightClass;
+    private int flightNumber;
+    private char flightClass;
+    
+    @Override
+    public boolean equals(Object o) {
+        / o doesnt have access to fields of Flight as it is Object type. So we will typecase it so that it can access fields of Flight./
+        Flight other = (Flight) o;
+        return flightNumver == other.flightNumber && flightClass == other.flightClass;
+    }
 }
-}
-So now if we do f1.equals(f2) -> returns TRUE
+
+So now
+if we do f1.equals(f2) - > returns TRUE
 BUT BEWARE WHAT IF THIS HAPPENS
 Passenger p = new Passenger();
-f1.equals(p) -> would return compile error as equals method would take it as an input. So we need to check the instance type before doing any typecasting.
-public boolean equals (Object o) {
-if (!(o instanceof Flight)) return false;
-// rest same
+f1.equals(p) - > would
+return compile error as equals method would take it as an input.So we need to check the instance type before doing any typecasting.
+public boolean equals(Object o) {
+    if (!(o instanceof Flight)) return false;
+    // rest same
 }
 ```
 
