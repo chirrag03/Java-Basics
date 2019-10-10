@@ -411,66 +411,88 @@ Had the child class made the method private then the myFunc() would have failed.
 
 ### Class Inheritance: Using Final and Abstract
 
-By default all classes can be extended and derived class have option to use or override (when allowed) the methods.
-A class can change these default behaviours. Base class can control whether it is allowed to be extended and how overriding methods work(whether it wants to prevent overriding or require it).
+By default all classes can be extended. As a result, derived classes have the option to use or override (when allowed) the methods.
+**Base class can change these default behaviours. It can control whether it is allowed to be extended and how overriding methods work (whether it wants to prevent overriding or require it).** 
 
-1) Use "final" keyowrd 
+**1) Using "final" keyowrd**
 - to prevent inheriting a class 
 
 ```java
 public final class Passenger {}
 ```
-// Now you are not allowed to inherit from this class.
+Now you are not allowed to inherit from this class.
 
 - to prevent overriding a method of the class
 ```java
-public class CargoFlight extends Flight  {
- 	public final void add1Package() {
- }
+public class Flight  {
+	public final void add1Package() {
+	}
 }
 ```
-This allows a class to be inherited from but does not allow a particular method to change. No point of marking method as final if class is final as you can’t override that class anyway.
+This allows a class to be inherited from but does not allow a particular method to change. No point of marking class as final because if class is final then you can’t override that class anyway.
 
-2) Use abstract keyword
+**2) Using "abstract" keyword**
 - to require inheriting and/or overriding
 
 ```java
 public class Pilot {
-private Flight currFlight;
-public void fly() {
-if (canAccept()){
-currFlight = f;
-}else {
-handleCanAccept();
-	}
-}
+    private Flight currFlight;
+    public void fly() {
+        if (canAccept(f)) {
+            currFlight = f;
+        } else {
+            handleCanAccept();
+        }
+    }
 
-private void handleCanAccept() {...}
+    private void handleCanAccept() { 
+    	...
+    }
 }
 ```
 
-Where is the canAccept() method ?
+**Where is the canAccept() method ?**  
+Our requirement is that the Pilot class has method canAccept() but we don’t know yet what that is. We need to leave the implementation of canAccept() to the derived class that inherits from it. So it allows us to use that method in other method (here in fly method).  
 
-Our requirement is that the Class Pilot has method canAccept() but we don’t know yet what that is. // So it allows us to use that method in other method (here in fly method) .
-We need to leave the implementation of canAccept() to the derived class that inherits from it.  
-
-To achieve this we define the method as abstract in the base class.
+To achieve this we define the method as abstract in the base class.  
 ```java
 public abstract boolean canAccept (Flight f);
 ```
 
-If a method is abstract, then the whole class must be abstract. So Pilot class has to be abstract.
+If a method is abstract, then the whole class must be abstract. So Pilot class has to be abstract.  
 ```java
 public abstract class Pilot { ...same as above }
 ```
-NOTE - An abstract class can have both abstract and non abstract methods. Its very uncommon to have a class as abstract and method not.
+
+So our class looks like:  
+```java
+public abstract class Pilot {
+    private Flight currFlight;
+    
+    public void fly() {
+        if (canAccept(f)) {
+            currFlight = f;
+        } else {
+            handleCanAccept();
+        }
+    }
+
+    private void handleCanAccept() { 
+    	...
+    }
+    
+    public abstract boolean canAccept (Flight f);
+}
+```
+
+**:bulb: NOTE - An abstract class can have both abstract and non abstract methods. Its very uncommon to have a class as abstract and method not.**  
 
 ```java
 public class CargoOnlyPilot extends Pilot {
-@Override
-public boolean canAccept (Flight f) {
-return f.getPassengers() == 0;
-}
+    @Override
+    public boolean canAccept(Flight f) {
+        return f.getPassengers() == 0;
+    }
 }
 ```
 
@@ -616,6 +638,7 @@ public enum FlightCrewJob {
     FlightAttendent,
     AirMarshal
 }
+
 public class CrewMember {
     private FlightCrewJob job;
     public CreMember(FlightCrewJob job) {
@@ -625,6 +648,7 @@ public class CrewMember {
         this.job = job;
     }
 }
+
 CrewMember judy = new CrewMember(FLightCrewJob.CoPilot);
 judy.setJob(FlightCreJob.Pilot);
 ```
