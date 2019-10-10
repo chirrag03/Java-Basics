@@ -249,11 +249,81 @@ derivedObject.baseclassmethod();
 ```
 This is valid as the derived class has inherited things of parent .
 
+### Object Class
+Object class is base class in java. By default all classes extend this Object class.
+
+```java
+Object o = new CargoFlight();
+o.add1Package(1.0, 2.5, 3.0); 		//doesnt work as o reference of Object type doesn't know addPackage.
+
+CargoFlight cf = (CargoFlight) o;
+cf.add1Package(1.0, 2.5, 3.0) 		//This runs
+
+if (o instance of CargoFlight) {	//First check before casting as it might result in classCastException otherwise
+    CargoFlight cf = (CargoFlight) o;
+    cf.add1PAckage(1.9, 2.5, 3.0);
+}
+```
+
+Object Methods -
+clone - Create new object instance that dupliates curr instance.
+hashCode - Get a hash code for the current instance
+getClass - Return type info for the current instance
+finalize - Handle special resource cleanup scenarious.
+toString Return string of chars representing the current instance
+equals - Compare another object to current instance for equality
+
+Some important methods in class java.lang.Object :
+
+![noImage](./img/table_11-1.png)
+
+
+### Equality Of Objects
+```java
+Flight f1 = new Flight(175);
+Flight f2 = new Flight(175);
+f1 == f2 	- > 	return false(as reference are checked to be equal)
+f1.equals(f2) 	- >	return false(as reference are checked to be equal)
+```  
+Operator == compares reference of the objects.
+
+**What It Means If You Don't Override equals()?**  
+Unless you override equals(), two objects are considered equal only if the two references refer to the same object, since the equals() method in class Object uses only the == operator for comparisons.  
+
+But now we want equal() method to behave differently to make a valid equality comparison of two Flight objects. So we override it.
+```java
+class Flight {
+    private int flightNumber;
+    private char flightClass;
+    
+    @Override
+    public boolean equals(Object o) {
+
+        if (!(o instanceof Flight)){
+		return false;
+	}
+	
+        Flight other = (Flight) o;
+        return flightNumber == other.flightNumber && flightClass == other.flightClass;
+    }
+}
+
+Now, f1.equals(f2) - > returns TRUE
+```  
+
+**What happens in the equals() method ?**  
+The object being tested comes in polymorphically as type Object. Hence it doesnt have access to fields of Flight as it is Object type. So we will have to typecast it to a Flight object so that it can access fields of Flight.  
+	
+But before that you need to do an instanceof test on it just to be sure that you could cast the object argument to the correct type, otherwise, you'll get a runtime ClassCastException if the cast fails.  
+
+Compare the attributes we care about (in this case, just flightNumber and flightClass). 
+
+**:eyes: The first thing in equals method we should do is to check if the current object and the Object o in argument have same reference, then no need to do casting and check attributes. We'll see how to do that later.**  
 
 ### Member Hiding and Overriding
 Member hiding: 
 
-Overriding: If methods of same signature (Method Signature means method name and parameters.) are there in parent and derived Classes, then the method of Derived Class overrides method of BaseClass.
+Overriding: If methods of same signature (Method Signature means method name and parameters) are there in parent and derived Classes, then the method of Derived Class overrides method of BaseClass.
 
 ```java
 public class BaseClass {
@@ -274,100 +344,44 @@ obj.x;
 obj.method();
 ```
 
-If a reference type is of the BaseClass then field accessed is of BaseClass because fields of BaseClass hides the fields of derived class. This may be dangerous.
+If a reference type is of the BaseClass then field accessed is of BaseClass because fields of BaseClass hides the fields of derived class. This may be dangerous.:skull:
 But a reference of BaseClass references object of a Derived Class then methods used are of derived class because methods are overridden.
 
-**:bulb: So field accessed depends on reference type used whereas method depends on the constructor used i.e the type of object the reference is pointing to.**
+**:bulb: So field accessed depends on reference type used whereas method depends on the constructor used i.e the type of object the reference is pointing to.**  
 
-### Object Class
-Object class is base class in java. By default all classes extend this Object class.
-
-```java
-Object o = new CargoFlight();
-o.add1Package(1.0, 2.5, 3.0); 		//doesnt work as o reference of Object type doesn't know addPackage.
-
-CargoFlight cf = (CargoFlight) o;
-cf.add1Package(1.0, 2.5, 3.0) 		//This runs
-
-if (o instance of CargoFlight) {
-    CargoFlight cf = (CargoFlight) o;
-    cf.add1PAckage(1.9, 2.5, 3.0);
-}
-```
-
-Object Methods -
-clone - Create new object instance that dupliates curr instance.
-hashCode - Get a hash code for the current instance
-getClass - Return type info for the current instance
-finalize - Handle special resource cleanup scenarious.
-toString Return string of chars representing the current instance
-equals - Compare another object to current instance for equality
-
-
-### Equality Of Objects
-```java
-Flight f1 = new Flight(175);
-Flight f2 = new Flight(175);
-f1 == f2 	- > 	return false(as reference are checked to be equal)
-f1.equals(f2) 	- >	return false(as reference are checked to be equal)
-```
-
-But now we want equal() method to behave differently. So we override it.
-```java
-class Flight {
-    private int flightNumber;
-    private char flightClass;
-    
-    @Override
-    public boolean equals(Object o) {
-        / o doesnt have access to fields of Flight as it is Object type. So we will typecase it so that it can access fields of Flight./
-        Flight other = (Flight) o;
-        return flightNumver == other.flightNumber && flightClass == other.flightClass;
-    }
-}
-
-So now
-if we do f1.equals(f2) - > returns TRUE
-BUT BEWARE WHAT IF THIS HAPPENS
-Passenger p = new Passenger();
-f1.equals(p) - > would
-return compile error as equals method would take it as an input.So we need to check the instance type before doing any typecasting.
-public boolean equals(Object o) {
-    if (!(o instanceof Flight)) return false;
-    // rest same
-}
-```
 
 ### Special Reference: Super
-A base class variable behaved as if it is variable of  derived class, reverse can also be done through super.
+A base class variable behaved as if it is variable of derived class, reverse can also be done through super.
 
 Special reference : super
 Similar to this, super is an implicit reference to the current object
 super treats the object as if it is an instance of its base class
-Useful for accessing base class members that have been overridden.
-Eg in the above implementation of equals we would like to do the logic if the references are different as if the references are same , there is no need to go for that logic . So we can use the equals method of Base class that does this.
+Useful for accessing base class members that have been overridden.  
 
+Eg in the above implementation of equals we would like to do the logic if the references are different as if the references are same, there is no need to go for that logic. So we can use the equals method of Base class that does this.
+
+```java
 @Override
 public boolean equals (Object o ) {
-if (super.equals(o)) return true;
-/rest same/
+	if (super.equals(o)) return true;
+	
+	/rest same/
 }
+```
 
+### NOTE on Method Overriding 
+- Methods must have the same method signature (i.e. method name and parameters).
 
-## NOTE on Method Overriding 
-Methods must have the same method signature (i.e. method name and parameters).
+- Method with the same signature cannot exist in the same class even with a different return type. But can exist in parent class relationship (Overriding  --- remember !). However here also the return type must be the same. (otherwise incompatible type error shown by compiler)
 
-Method with the same signature cannot exist in the same class even with a different return type. But can exist in parent class relationship (Overriding  --- remember !). However here also the return type must be the same. (otherwise incompatible type error shown by compiler)
+- private methods cannot be overridden. As they can be called within the class only.
 
-private methods cannot be overridden. As they can be called within the class only.
+- Moreover the method in the child class should not specify a lesser (weaker) access to the overriding method. (A protected method in base class cannot be overriden as private method in child class)
 
+- So method can be overridden when methods of same signature and return type and greater access is there in child class.
 
-Moreover the method in the child class should not specify a lesser (weaker) access to the overriding method. (A protected method in base class cannot be overriden as private method in child class)
-
-So method can be overridden when methods of same signature and return type and greater access is there in child class.
-
-Also Why is greater access of overriden function allowed ? 
-    Overriding method does not affect anything of overriden method of base class . as overriding function is function of an object defined as new ChildClass(). So our intention was there for overridden function to be of greater access(e.g public) . 
+**Also Why is greater access of overriden function allowed ?**  
+Overriding method does not affect anything of overriden method of base class . as overriding function is function of an object defined as new ChildClass(). So our intention was there for overridden function to be of greater access(e.g public) . 
 
 
 ```java
