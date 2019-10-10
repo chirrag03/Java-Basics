@@ -615,19 +615,18 @@ Making a field final prevents it from being changed once assigned.
 1) A simple non-static final field must be set during creation of an object instance. (Can be set with field initializer, initialization block, or constructor).
 2) Adding the static modifier makes a final field a named constant.
 
-ASIDES START  
-- Fields defined in an interface are static and final by default but in abstract class you can define non static object fields.
+**:key:Key Points**  
+- Fields defined in an interface are static and final by default   
+- Fields in an abstract class can be defined as static/non-static object fields   
 
 **Why are all fields in an interface are static and final ?**  
-Because no object can be created, thus fields must be static. We need that value or capability is there.
-All methods & fields in the interface are public Why? because the motive of an interface is to provide the user a set of fields and methods.
-It makes no sense to make fields private or protected.
-ASIDES END
+Because no object can be created, thus fields must be static. We need to give that value or capability to all classes that implement this interface.  
+All methods & fields in the interface are public Why? because the motive of an interface is to provide the user a set of fields and methods. It makes no sense to make fields private or protected.  
 
 
 ### ENUMERATION Types
 
-Enumeration types useful for defining a type with a finite list of valid values.
+Enumeration types are useful for defining a type with a finite list of valid values.  
 - Declare with enum keyword
 - Provide a comma separated value list.
 
@@ -641,7 +640,7 @@ public enum FlightCrewJob {
 
 public class CrewMember {
     private FlightCrewJob job;
-    public CreMember(FlightCrewJob job) {
+    public CrewMember(FlightCrewJob job) {
         this.job = job;
     }
     public void setJob(FLightCrewJob job) {
@@ -655,129 +654,135 @@ judy.setJob(FlightCreJob.Pilot);
 
 ### More About Data Types: Summary
 String class stores an immutable sequence of Unicode characters
- ** Implement toString method to
- provide conversion to a string .
-StringBuilder class provides an efficient way to manipulate string values.
-Primitive wrapper classes bring class capabilities to primitive values .
- **Wrapper classes much less efficient than primitive types.
+Implement toString method to provide conversion to a string .
+StringBuilder class provides an efficient way to manipulate string values.  
+
+Primitive wrapper classes bring class capabilities to primitive values.
+Wrapper classes much less efficient than primitive types.  
+
 Final fields prevent a value from being changed once assigned
- ** Non-static final fields must be set during object instance creation.** Static final fields act as named constants
-Enumeration types useful for defining a type with a finite list of values.
+Non-static final fields must be set during object instance creation. Static final fields act as named constants.  
+
+Enumeration types useful for defining a type with a finite list of values.  
 
 
-## Exceptions and Error Handling: Error Handling with Exceptions
+## Exceptions and Error Handling
 
-Error handling needs to be implicit in application development.
-The traditional approach of checking error codes / flags is too intrusive
+### Error Handling with Exceptions
+Error handling needs to be implicit in application development. The traditional approach of checking error codes / flags is too intrusive.
 
-Whenever there is some error, an error object is created by JVM and is thrown. Now what should happen, should the program continue to run or should it give programmers a choice , whether to continue running programme, or stop the execution. 
+**Whenever there is some error, an error object is created by JVM and is thrown. Now what should happen, should the program continue to run or should it give programmers a choice, whether to continue running programme or stop the execution. To give programmers a choice java platform provides exceptions.**   
 
-To give programmers a choice java platform provides exceptions. 
+Exceptions provides a non intrusive way to signal errors.
 
-Exceptions provides a non intrusive way to signal errors
-Any code can throw an exception: your code, code from a package written by someone else such as the packages that come with the Java platform, or the Java runtime environment. Regardless of what throws the exception, it's always thrown with the throw statement.
+**Any code can throw an exception: your code, code from a package written by someone else such as the packages that come with the Java platform, or the Java runtime environment. Regardless of what throws the exception, it's always thrown using the throw statement.**  
 
 
-**ERROR vs EXCEPTIONS**  
+### ERROR vs EXCEPTIONS
 Both Errors and Exceptions are the subclasses of java.lang.Throwable class. 
 
-An Error “indicates serious problems that a reasonable application should not try to catch.” Errors are the conditions which cannot get recovered by any handling techniques. It surely cause termination of the program abnormally. Errors belong to unchecked type and mostly occur at runtime.  
-Eg: Stack overflow error in case of infinite recursion, Out of memory error in case of exhausting the heap space .  
+**An Error** “indicates serious problems that a reasonable application should not try to catch.” Errors are the conditions which cannot get recovered by any handling techniques. It surely cause termination of the program abnormally. Errors belong to unchecked type and mostly occur at runtime. For Eg: 
+1) Stack overflow error in case of infinite recursion   
+2) Out of memory error in case of exhausting the heap space  
 
 If these cases occur, program cannot continue the execution i.e it will have to terminate and hence JVM throws Throwable object of type Error.
 
-An Exception “indicates conditions that a reasonable application might want to catch.” Exceptions are the conditions that may occur at runtime or compile time and may cause the termination of program. But they are recoverable using try, catch and throw keywords. 
+**An Exception** “indicates conditions that a reasonable application might want to catch.” Exceptions are the conditions that may occur at runtime or compile time and may cause the termination of program. But they are recoverable using try, catch and throw keywords. 
 
-Exceptions are divided into two categories : checked and unchecked exceptions. Checked exceptions like IOException are exceptions which compiler necessitates to be catched if thrown in code .
-While unchecked exceptions like ArrayIndexOutOfBoundException, ClassCast , Null Pointer  WILL NOT BE CHECKED BY  THE compiler (even if you throw the exception explicitly). It is mostly caused by a program written by the programmer.
+Exceptions are divided into two categories : checked and unchecked exceptions. 
+- Checked exceptions like IOException are exceptions which compiler necessitates to be catched if thrown in code  
+- Unchecked exceptions like ArrayIndexOutOfBoundException, ClassCastException , NullPointerException  WILL NOT BE CHECKED BY  THE compiler (even if you throw theses exceptions explicitly). It is mostly caused by a program written by the programmer and can be rectified by changing logic.  
 
+**try/catch/finally provides a structured way to handle exceptions.**  
+1) the try block contains the "normal" code to execute  
+Block executes to completion unless an exception is thrown  
 
-try/catch/finally provides a structured way to handle exceptions.
-1) the try block contains the "normal" code to execute
-Block executes to completion unless an exception is thrown
+2) The catch block contains the error handling code  
+Block executes only if matching exception is thrown  
 
-2) The catch block contains the error handling code .
-Block executes only if matching exception is thrown
+3) The finally block contains cleanup code if needed  
+Runs in all cases, following try or catch block  
 
-3) The finally block contains cleanup code if needed
-Runs in all cases, following try or catch block
-
-      Error Handling example
+**Error Handling example**  
 C:\Numbers.txt;
 5
 12
 6
 4
-A lot of things may go wrong here. May be the file doesn’t exist, May be some kind of system error occurred , When we try to read from the file, May be there is bad data in the file, May be there is bad data (there may be "xyz" n place of number)
+A lot of things may go wrong here. May be the file doesn’t exist, May be some kind of system error occurred. When we try to read from the file, May be there is bad data in the file (there may be "xyz" in place of number)
 So that is why we put everything in a try block;
 
-Whenever we open a file we should be closing it, irrespective of the fact that exception occurred or not. So i.e why we close it in a finally statement to make reader.close();
+Whenever we open a file we should be closing it, irrespective of the fact that exception occurred or not. So i.e why we close it in a finally block.
 
 ```java
 BufferReader reader = null;
 int total = 0;
 
 try {
-reader = new BufferReader (new FileReader("C:\Numbers.txt"));
-String line = null;
-while ((line = reader.readLine()) != null) total += Integer.valueOf(line);
-System.out(println("Total: ) + total);
-} catch {
-System.out.println(e.getMessage());
+    reader = new BufferReader(new FileReader("C:\Numbers.txt"));
+    String line = null;
+    while ((line = reader.readLine()) != null) {
+        total += Integer.valueOf(line);
+    }
+    System.out.println("Total:" + total);
+} catch (Exception e) {
+    System.out.println(e.getMessage());
 } finally {
-try {
-// it may be that reader is not defined i.e in error occured in File reading itself. So we put null check there.
-if (reader != null){
-reader.close();
-} catch {
-System.out.println(e.getMessage());
-}
+    try {
+        // it may be that reader is not defined i.e in error occured in File reading itself. So we put null check there.
+        if (reader != null) {
+            reader.close();
+        } catch {
+            System.out.println(e.getMessage());
+        }
+    }
 }
 ```
 
 ### Handling Exceptions by Type
-
-For an object to be able to be thrown , it needs to extend class called "Throwable".
+For an object to be able to be thrown, it needs to extend class called "Throwable".
 Classes which extend throwable
 1) Error - it throws JVM related errors. E.g LinkageErrors. These errors are unchecked (i.e compiler does not require them to be handled.)
-2) Exception - Includes
-a. RuntimeException -  this includes exceptions like NullPointerException, ArrayIndexOutOfBound , ClassCastException  and others . runtime Exception class extends Exception class. It is made for the use cases where we want to terminate the thread by throwing an exception. So we can make a custom exception extending RuntimeException and if we throw it, the compiler does not require us to catch it . So At runtime when it will be thrown , thread will terminate.
+
+2) Exception - This includes
+a. RuntimeException - Exceptions like NullPointerException, ArrayIndexOutOfBound , ClassCastException. Runtime Exception class extends Exception class. It is made for the use cases where we want to terminate the thread by throwing an exception. So we can make a custom exception extending RuntimeException and if we throw it, the compiler does not require us to catch it because it cannot be checked by the compiler. So At runtime when it will be thrown and thread will terminate.
 These are also unchecked exceptions.
+
 b. Other exceptions extending class Exception. These include exceptions like IOException.
-ONLY EXCEPTIONS WHICH EXTENDS "Exception" CLASS ARE CHECKED EXCEPTIONS. i.e compiler wants them to be handled before hand in code.
-SO ALL EXCEPTIONS extending "Exception" class are checked exceptions except RuntimeException class (which include NullPointerExeption).
+Except the exceptions that extend RuntimeException, ALL OTHER EXCEPTIONS extending "Exception" class are checked exceptions i.e compiler wants them to be handled before hand in code.  
 
 Typed Exceptions
 Exception can be handled by type.. i.e Each exception type can have a seperate catch block and they are tested in order and first assignable catch is selected.
 
 
-### Exceptions and Methods
-**How try catch works?**
+### How try-catch works?
 When a method has try catch block it puts a marker on the call stack. So if an exception occurs the method with a marker is checked on the call stack, control is passed to that method, thus removing all other method calls from the call stack.
 
 So Exceptions propagate down the call stack. (Can cross method boundaries)
-Exception are part of a method's contract i.e Method is responsible for any checked exceptions that might occur. It has 2 ways to deal with it .
+Exceptions are part of a method's contract i.e Method is responsible for any checked exceptions that might occur. It has 2 ways to deal with it:  
 1) Catch the exception
-2) intimate or Document that the exception might occur by use of "throws" clause.
+2) Intimate that the exception might occur by use of "throws" clause.  
 
-For e.g if we are using FileReader(filename) and reader.readline() in our code. They may throw an exception. So we don’t put try catch in our code as those should be handled by FileReader and realine only. So instead we put the "throws" clause. And Since FileReader says it throws "FileNotFound Exception" and Readline throws "IOException". and FileNotFoundException is also an IOException, we can throw IOException.
-IF WE DIDN’T "CATCH" OR DIDN’T PUT THE "throws" on , COMPILER WOULD ACTUALLY COMPLAIN. So by putting the "throws" we say its our responsibility in dealing with it.
+For e.g if we are using FileReader(filename) and reader.readline() in our code. They may throw an exception. So we don’t put try catch in our code as those should be handled by FileReader and realine only. So instead we put the "throws" clause. And Since FileReader says it throws "FileNotFound Exception" and Readline throws "IOException".  
+
+FileNotFoundException is also an IOException, so we can just throw IOException.  
+
+IF WE DIDN’T "CATCH" OR DIDN’T PUT THE "throws" on the method, COMPILER WOULD ACTUALLY COMPLAIN. So by putting the "throws" we say its our responsibility in dealing with it.  
 
 
 ```java
 try {
-....
+    ....
 } finally {
-if (reader != null) {
-reader.close();
-}
+    if (reader != null) {
+        reader.close();
+    }
 }
 ```
 
-// Here if everything runs fine, finally runs and reader close. and if exception occurs finally still runs and close the file and let the exception call up the call stack.
+Here if everything runs fine in the try block, then finally block runs and closes reader. Even if exception occurs finally block still runs and closes the file and let the exception call up the call stack.  
 
-### Exceptions and Methods
-The throws clause of an overriding method must be compatible with the throws clause of the overridden method.
+**The throws clause of an overriding method must be compatible with the throws clause of the overridden method.**  
 Ways to change the throws clause in the overriding method (i.e. in derived class):
 1) Not providing any throws clause. (i.e we don't throw any exception that is not already defined in base class.)
 2) Can throw the same exception as base class.
