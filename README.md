@@ -848,6 +848,165 @@ public class InvalidtatementException extends Exception {
 Normally inherit from Exception
 
 
+## Working with Packages
+
+### What Is a Package?
+A package is a group of related types.
+- It creates a namespace
+- Provide an access boundary
+- Act as a unit of distribution
+
+Each source file tells the package it is in.
+Use package keyword
+1) Package declaration must appear before any type declarations
+2) Now all types defined in that source file are part of that package. defined in first line.
+
+### Packages Create a Namespace
+Package creates a namespace 
+- Package name is part of the type name
+- Convention creates unique package name. Follows reverse domain name structure.
+- Type name is qualified by package name.
+
+```java
+package com.pluralsight.travel;
+public class Flight {}
+```  
+
+Example of a qualified name
+```java
+com.pluralsight.travel.Flight lax175 = new com.pluralsight.travel.Flight(175);
+```
+
+###  Determining a Type's Package
+Compiler needs to know each type's package and explicitly qualifying each package name is impractical.  
+For this Java offers several alternatives which allow use of types's simple name.  
+1) Types in current package don’t need to be qualified.  
+2) Types in the java.lang package dont need to be qualified.  
+3) Type Imports  
+It guides the compiler to map simple names to qualified names. Use import keyword followed by qualified name.  
+a. Single type import - Provides mapping for a single type. this is preferred way.  
+b. Import on demand. This provides mapping for all types in a package.  
+
+For example, we have follwing classes:
+```java
+package com.pluralsight.travel;
+public class Flight{}
+```  
+```java
+package com.pluralsight.travel ;
+public class Passenger{}
+```  
+```java
+package com.xyzcompany.bar;
+public class Beer {}
+```  
+```java
+package com.xyzcompany.bar;
+public class Wine {}
+```  
+
+**Single Type import**  
+```java
+import com.pluralsight.travel.Flight;
+import com.xyzcompany.bar.Beer;
+// telling that we are using Flight class as defined in pluralsight.travel.Flight.
+
+Floght lax175 .= new flight (175);
+Beer liteBeer = new Beer();
+```  
+
+**Import on Demand**  
+```java
+import com.pluralsight.travel.*;
+import com.xyzcompany.bar.*;
+
+Beer lightBeer = new beer(); // works fine.
+Passenger jane = new Passenger(); // works fine
+```  
+
+**So Why use single import :question:**  
+Take a look at the java API, and you'll see many classes and interfaces with the same name in different packages.  
+For example:  java.lang.reflect.Array, java.sql.Array  
+
+So, if you import java.lang.reflect.* and java.sql.* you'll have a collision on the Array type, and have to fully qualify them in your code.
+
+Importing specific classes instead will save you this hassle.
+
+To prevent this either we can import one type, and use qualified name for other, or we can use qualified name for both.  
+```java
+import java.lang.reflect.Array;
+
+class Test{
+  public void test() {
+    Array a1 ;
+    java.sql.Array a2;
+  }
+}
+
+//OR
+
+class Test{
+  public void test() {
+    java.lang.reflect.Array a1 ;
+    java.sql.Array a2;
+  }
+}
+```  
+
+### Static import Declarations
+(https://howtodoinjava.com/java/basics/static-import-declarations-in-java/)  
+
+### Packages Provide Access Boundaries
+How can we make a thing private for a package?  
+Package can serve as an access boundary which is often referred to as package private.  
+This is useful for creating types and features to support functionality provided by the package which are not meant to be used stand alone.  
+This access boundary can apply to a type i.e entire type is inaccessible outside of the package OR can apply to members of a Type i.e Specific members of otherwise accessible type are inaccessible outside of the package.  
+
+1) No access modifier - Visible only within its own package (a.k.a package private)| Usable on types | Usable on members  
+2) public - Visible everywhere | EveryWhere | Usable on types | Usable on members  
+3) private - Visible Only within its own class | Not Usable on types (if not nested class) | Usable on members.  
+4) protected - Visible with its own class and subclass | Not Usable on types (if not nested classes) | Usable on Members.  
+
+private and protected cant be used on types(class). So types cant be private and protected unless they are nested class.  
+
+### Packages Act as a Unit of Distribution
+Packages provide a predictable software structure which simplifies distribution. Class files organized in hierarchial folders reflecting the package name. Each part of the package name is separate folder.  
+
+For eg
+```java
+package com.pluralsight.travel;
+public class Flight {}
+public class Passenger {}  
+```  
+
+When we build this we get the folder structure like this having bytecode :-  
+com -> pluralsight -> travel -> Flight.class  
+Passenger.class  
+So to distribute this, we can copy paste this folder structure  
+
+There is another way to distribute package except through folder structure we saw.
+It is through ARCHIVE FILES- that is the entire folder structure can be moved to a single file, commonly called as "jar" files which can then be compressed.  
+The archive file may also include manifest that provides info about what is going inside of that archive. It basically contains list of name-value pairs. They are commonly used to define startup class.  
+
+**How to make jar files ?**  
+We can make jar files through:
+- JDK which provides jar command-line utility.
+- IDES
+- Build automation systems, also known as build managers like gradle maven.
+
+
+### Working with Packages: Summary
+- A package is a group of related types.
+- Package declaration must appear in source file before any type declarations.
+- Type name qualified by package name
+- Use import statements to map simple names to qualified names
+- Packages serve as an access boundary
+- Types organized hierarchically according to the package name
+- Archive files store package hierarchy in a single file
+
+
+
+
 
 
 
