@@ -792,15 +792,14 @@ WHY SO : -1
 Checked exceptions are intended for use in situations where a method may expect its caller to be prepared to deal with certain problems that may arise. If callers of BaseFoo.Bar() are not required to deal with a FnordException, then method DerivedFoo.Bar() cannot expect its callers to deal with a FnordException either (since many of its callers will be the same ones that were unprepared to have BaseFoo.Bar() throw it).
 
 ### Throwing Exceptions and Custom Exceptions
-Throwing Exceptions
-we can also throw exceptions to signal that error has occurred or we want to add more information about error that has occurred.
-they are thrown with throw keyword.
-Must create exception instance before throwing. Be sure to provide meaningful detail.
-Most exception classes provide a constructor that accepts a String message or other detail
-Now there are cases where we make new exception on top of some other exception to add some info. (tying one exception to another exception).
-So when caused by another exception include originating exception
-All exception classes support initCause method to associate one exception with other.
-Many provide a constructor that accepts the originating exception.
+We can also throw exceptions to signal that error has occurred or we want to add more information about error that has occurred.  
+They are thrown using "throw" keyword.  
+Must create exception instance before throwing. Be sure to provide meaningful detail.  
+Most exception classes provide a constructor that accepts a String message or other details.  
+Now there are cases where we make new exception on top of some other exception to add some info. (tying one exception to another exception).  
+So when caused by another exception include originating exception.  
+All exception classes support initCause method to associate one exception with other.  
+Many provide a constructor that accepts the originating exception.  
 
 
 ### CalcEngine with Exceptions
@@ -837,7 +836,7 @@ public class InvalidtatementException extends Exception {
 }
 ```
 
-Exceptions and Error Handling: Summary
+### Exceptions and Error Handling: Summary
 1) Exceptions provide a non-intrusive way to signal errors
 2) try/catch/finally provide a structured way to handle exceptions
 3) Exceptions are caught by type
