@@ -1006,6 +1006,281 @@ We can make jar files through:
 
 
 
+## Creating Abstract Relationships with Interfaces
+
+### Introducing Interfaces & Implementing an Interface
+An interface defines a contract. Provides no implementation.  
+Classes implement interfaces. This implies that the class conforms to the contract.  
+Interfaces don't limit other aspects of the class implementation.  
+
+
+Interfaces can accept a parameterized type.
+   - Uses a concept known as generics.
+
+```java
+public interface Comparable < T > {
+    int compareTo(T o);
+}
+public class Flight implements Comparable < Flight > {
+    public int compareTo(Flight f) {
+        // no typecast required.
+        ....implementation
+    }
+}
+public class Passenger implements Comparable < Passenger > {
+    public int compareTo(Passenger p) {
+        // no tyecast required
+        ...implementation
+    }
+}
+```
+
+Classes are free to implement multiple interfaces.
+
+E.g Lets say we want to iterate on passengers of Flight class.
+```java
+Flight lax045 = new Flight (45);
+```  
+We want to do this:
+```java
+for (Person p: lax045) { ... }
+```  
+
+So we need  Flight class to give us iterator through which we can iterate on persons.
+
+For this, Flight class need to implement Iterable<T> interface. And it will implement iterable<Person> i.e it is iterable on person class;
+
+We need to achieve something like this:  
+```java
+Iterable<Person> laxIterable = lax045;
+Iterator<Person> persons = laxIterable.iterator();
+while (persons.hasNext()) {
+	Person p = persons.next();
+	{Body of for loop.}
+}
+```  
+So we need Flight class to be iterable and as we want iterator object from object of Flight class that iterate on person of flight, Object of flight class should be able to return an iterator object which can return Person object one after other (So should have hasNext and next method.)
+
+
+### Implementing Multiple Interfaces
+
+```java
+public class Flight implements Comparable < Flight >, Iterable < Person > {
+    public int compareTo(Flight f) {
+        // no typecast required.
+        ....implementation
+    }
+    
+    public Iterator < Person > iterator() {
+        return new FlightIterator(crew, roster);
+    }
+}
+public class FlightIterator implements Iterator < Person > {
+    boolean hasNext() { ...
+    }
+    public Person next() { ....
+    }
+}
+```
+
+### Declaring an Interface
+Declaring an interface is similar to declaring a class. Just use the interface keyword.
+- Supports a subset of the features available to classes
+ 1) Methods - Name , parameters and return types
+ 2) Implicitly public
+
+- Constants - Typed named values (Implicitly public final static)
+
+### Extending interfaces
+An interface can extend another interface  
+- To add capabilities to existing capabilities
+- Implementing extended interface implies implementation of base.
+
+### Creating Abstract Relationships with Interfaces: Summary
+- An interface defines a contract
+- Provides no implementation
+- Can include methods and constants. By default methods and fields are public. Moreover fields are static and final constants.
+- Classes implements interfaces and are able to implement multiple interfaces
+- Interfaces are able to extend other interfaces
+
+
+## Static Members, Nested Types, and Anonymous Classes
+
+### Static Members
+- Static members are shared class-wide
+- Not associated with an individual instance
+- Declared using the static keyword.
+- Accessible using the class name
+**Field - A value not associated with a specific instance, All instance access same value.**
+**Method - Not tied to a specific instance, CAN ONLY CALL static methods and ACCESS STATIC FIELDS ONLY.**
+
+### Static Initialization Blocks
+Perform one time initialization and Executed when a class is loaded in memory  
+Statements enclosed in brackets outside of any method or constructor  
+Static blocks precede with static keyword  
+Cannot access instance members, Must handle all checked exceptions  
+
+```java
+Class ABC {
+	static {
+		.....
+	}
+} 
+```   
+
+**NOTE: Static methods cannot call a non static method or even access nono static members of a class.**  
+**Non Static methods can call a static method or access static members of a class.**  
+
+### Nested Types
+- A Nested type is a type declared within another type.  
+- Classes can be declared within classes and interfaces.  
+- Interfaces can be declared within classes and interfaces.
+- Nested types are members of the enclosing type.
+- Private members of the enclosing type are visible to the nested type.
+- Nested types support all member access modifiers: public, package private, protected, private
+
+**:key: Key Points On Access Specifiers**  
+**:open_mouth: Protected member means that it can be accessed from any subclass, doesn’t matter from which package it is accessed from. But if it is not accessed from a subclass, then it cannot be accessed from outside of package (package private)**  
+
+Access specifier: private, protected, package-private, public
+For class and interfaces: Applicable access modifiers are public and package-private 
+For class members: All access modifiers are applicable (static/non-static methods, nested class, static/non-static fields).
+
+Nested types serve differing purposes
+1) Structure and scoping - this is the case when there is no certain relationship between instances of nested and enclosing type - its just that you want to make the type usable in certain scenarios or u wanna structure its naming relative to another class.
+This happens when you have :
+a. Static classes nested within classes.
+b. All classes nested within interfaces.
+c. all nested interfaces.
+
+public class Passenger implements Comparable {
+private int memberLevel;
+private int memberDays;
+}
+
+// Now we have a rewardCalculating method who need these two variables.
+Let's say there is a concept of rewards that is based on memberLevel and memberDays. Often times we have this scenario where two values represent a single concept. So we can wrap that up in a class. 
+
+**We can create rewardsProgramme Class but this is rewardsProgramme as it applies to Passenger. There may be a rewardsProgramme for Crew etc. How to solve this?**  
+We can make two separate independent classes, one called PassengerRewardsProgramme and other CrewRewardProgramme.  
+				OR 
+We can have a rewardsProgramme class that we can nest inside of passenger.  
+
+
+```java
+public static Passenger implements Comparable {
+    public static class RewardPrograme {
+        private int memberLevel;
+        private it memberDays;
+        // getters and setters
+    }
+    
+    private RewardPrograme rewardProgram = new RewardProgram();
+    
+    public RewardProgram getRewardPrograme { 
+    	...
+    }
+}
+```
+
+So here is the case of using nested class as a mechanism to provide structure and scoping. Here rewardProgramme is nested static class , So its name is scoped within the passenger class.
+
+```java
+Passenger steve = new Passenger ();
+steve.setName("Steve");
+steve.getRewardProgram().setLevel(3);
+steve.getRewardProgram().setMemberDays(180);
+Passenger.RewardProgram platinum = new Passenger.RewardProgram();
+platinum.setLevel(3);
+if (steve.getRewardProgram().getLevel() == platinum.getLevel()) print("Steve is platinum");
+```  
+
+So here we can make a name of a class to be structured inside of another.
+
+**Another Example for static nested class where you require a structure or a naming relative to another class:** We have gridObject for both CatalogGrid and SearchGrid but they may have different attributes in gridObject.  
+
+Now we will see the case if nested class is not marked static.  
+
+
+### Inner Classes
+
+Each instance of nested class is associated with an instance of the enclosing class. FlightIterator makes no sense unless we have a Flight object i.e Flight Iterator is of some Flight object. 
+Non static classes nested within classes
+
+**Example: Remember the code we made for Flight Iterable class and FlightIterator class. We had to pass data of Flight instance as input to constructor of FlightIterator class, so that it can implement hasNext() and next().**  
+
+But with inner class we can create FlightIterator class (marked private and not marked static i.e inner class) inside of Flight class. So that FlightIterator instance is implicitly tied to instance of Flight class and we don’t have to keep duplicates of same data in two different classes.  
+
+And this is more intuitive as FlightIterator class itself gives Iterator. i.e we can ask for Iterator of an iterable by that Iterable class only.
+
+```java
+public class Flight implements Comparable < Flight >, Iterable < Person > {
+    private CrewMember[] crew;
+    private Passenger[] roster;
+    
+    public Iterator < Person > iterator() {
+        return new FlightIterator();
+    }
+
+    public FlightIterator iterator() {
+        return new FlightIterator();
+    }
+    
+    private class FlightIterator implements Iterator < Person > {
+        private int index = 0;
+        public boolean hasnext() {
+            return index < (crew.length + roster.length);
+        }
+
+        public Person next() {
+            Person p = (index < crew.length) ? crew[index] : roster[index - crew.length];
+            index++;
+            return p;
+        }
+	//IMPORTANT NOTE:  Inner class has "this" referene as it is able to reference index (in index++) but . it was also able to get crew in ( in crew[index] : roster[index - crew,length]); i.e it also has Flight.this which it used to access the members of instance of class in which it was created
+    }
+}
+```
+
+### Anonymous Classes
+
+- Anonymous classes are declared as part of their creation of their object
+- Anonymous class is a class jiska object ek hi jagah se banna ho
+- Useful for simple interface implementations or class extensions
+- Anonymous classes are inner classes and are associated with the enclosing class instance.  
+(anonymous class is always inner class because it can’t be used anywhere else except where it is defined. So anonymous class would be used inside of a function which in turn is inside of some class............why?......so that definition can be used to get an instance (of that anonymous class) which is associated directly with the enclosing class inside which instance of anonymous class is used.)
+- Create anonymous class as if you are constructing an instance of their interface or base class  
+- Place opening and closing brackets after the interface or base class and place implementation code within the brackets
+- Implicitly final  
+(Agar ek he jagah se object banna hai to main uski definition vohi kyu na du)  
+
+For Example: In our Flight class FlightIterator Inner class is used nowhere except the iterator method. That is a great chance to use anonymous class.  
+
+Thus we modify the iterator method like this :  
+```java
+public Iterator < Person > iterator() {
+    return new Iterator < Person > () {
+        private int index = 0;
+        public boolean hasNext() {
+            return index < (crew.length + roster.length);
+        }
+        public Person next() { ...same implementation
+        }
+        // Now as this class is inner class it has access to the member of enclosing class.
+    };
+}
+```
+
+**So instead of declaring classes and giving them class names that we are only using at one place, we declare and create the class where we need it.**  
+
+### Static Members, Nested Types, and Anonymous Classes: Summary
+1) Static methods and fields are shared class wide (Not associated with individual instance)  
+2) Static initialization block provide one time type initialization  
+3) A nested type is a type declared within another type and can be used to provide structure and scoping  
+4) Inner classes create an association between nested and enclosing instances  
+5) Anonymous classes are declared as part of their creation and used as  class extensions  
+
+
 
 
 
