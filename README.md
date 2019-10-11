@@ -171,14 +171,14 @@ Following access modifiers can be used:
 - public : can be accessed form everywhere
 
 | Access Modifiers        |                                   | 
-| ----------------------- |:---------------------------------:| 
+| ----------------------- |-----------------------------------| 
 | private                 |within a class only                |
 | protected               |within a package or from subclasses|
 | package-private         |within a package                   |
 | public                  |everywhere                         |
 
 
-**Special References: this and null**
+**Special References: this and null**  
 *this* (Allows an object to pass itself as an parameter)  
 *null* is a references literal that represents an uncreated obj. Can be assigned to any reference variable.  
 
@@ -226,7 +226,7 @@ func (p1, p2, 1.3, 3.4, 4.5) 	-> list will be [1.3, 3.4, 4.5]
 ```  
 
 ### A Closer Look at Parameters: Variable Number of Parameters: Summary -
-Parameters are immutable (Changes made to passed value are not visible outsude of method)
+Parameters are immutable (Changes made to passed value are not visible outsude of method)  
 Method can be declared to accept varying number of parameter values(values received as an array, Must be last parameter)
 
 ---------------------------------
