@@ -121,97 +121,113 @@ xyz.java -> JDK - > Java App -> JRE -> Host environment (Mac , windows, browser 
 (https://www.geeksforgeeks.org/differences-jdk-jre-jvm/)
 
 -----------------------------------------
-Creating a Simple App: Introducing Packages
+## Introducing Packages
+- Provides organization.
+- Follows standard naming
+- Affect source code file structure
+- All lower case
 
-Packages
-provides organization.
-follow standard naming
-affect source code file structure
-All lower case
-Use reversed domain name to assure global uniqueness
-add further thing to assure uniqueness within company
- Eg pruralsight.com -> com.pluralsight                         com.pluralsight.accounting.myProject
+- Use reversed domain name to assure global uniqueness  
+> Eg: pruralsight.com -> com.pluralsight    
 
- com.pluralsight.courseseg.myProject
-Members become part of the package - E.g Main inside com.pruralsight.myproject -> com.pluralsight.myProject.Main
+- add further thing to assure uniqueness within company
+> Eg: com.pluralsight.accounting.myProject
+> Eg: com.pluralsight.courseseg.myProject
 
-Package and source file structure
-Java requires no relation b/w package and code file structure BUT most IDEs require a sub folder for each part of package name.
-Main inside com.pluralsight.example expects src - com - pruralsight - example - Main.java
+Members become a part of the package  
+> E.g Main class inside com.pruralsight.myproject -> com.pluralsight.myProject.Main
 
-Representing Complex Types with Classes: 
-Applying Access Modifiers
+**Package and source file structure**  
+Java requires no relation b/w package and code file structure BUT most IDEs require a sub folder for each part of the package name.
+A class Main inside *com.pluralsight.example* expects *src -> com -> pruralsight -> example -> Main.java*
+
+
+## Representing Complex Types with Classes: 
+### Applying Access Modifiers
 A “public” class with name eg."abc" has to be inside a source file with the same name as class name i.e abc.java
-NOTE - only public class. (Not inner or nested .) ……...A main method is most of the times not inside Main.java
+NOTE - only public class (Not inner or nested)
 
-Naming Classes
-For ClassNames use PAscal case i.e Start of each word , including first , is upper case BankAccount
+### Naming Classes
+For ClassNames use Pascal case i.e Start of each word, including first, is upper case. Eg: BankAccount
 
-Method
-Exiting from a Method
+### Method
+**Exiting from a Method**  
 A method exits for one of three reason
-An error occurs
- -return statement
-end of method has reached
-Method Return Values
+- An error occurs
+- return statement
+- end of method has reached
+
+**Method Return Values**  
 return Type of Methods
-A primitive value
-A reference to an object
-A reference to array - Arrays are objects
+- A primitive value
+- A reference to an object
+- A reference to array - Arrays are objects  
+
+**Applying Access Modifiers**  
+Following access modifiers can be used:
+- private : can be accessed within a class only
+- protected : can be accessed within a package or from subclasses 
+- package-private : can be accessed within a package
+- public : can be accessed form everywhere
+
+| Access Modifiers        |                                   | 
+| ----------------------- |:---------------------------------:| 
+| private                 |within a class only                |
+| protected               |within a package or from subclasses|
+| package-private         |within a package                   |
+| public                  |everywhere                         |
 
 
-Applying Access Modifiers
-Methods types - protected method can be called by subclasses , But private method can not be called by subclasses 
-Special References: this and null
+**Special References: this and null**
+*this* (Allows an object to pass itself as an parameter)  
+*null* is a references literal that represents an uncreated obj. Can be assigned to any reference variable.  
 
-Special references - this (Allows an object to pass itself as an parameter)
-null is a references literal
-represents an uncreated obj
-Can be assigned to any reference variable
+## Class Initializers and Constructors
 
-Class Initializers and Constructors: Chaining Constructors and Constructor Visibility
-
+### Chaining Constructors and Constructor Visibility
 Constructor - no return type
 
 this(arg) calls constructor with one arg.
 this has to be the first line of other constructor
 
-Q- Why super and this  has to be first line ? 
-Ans- The parent class' constructor needs to be called before the subclass' constructor. This will ensure that if you call any methods on the parent class in your constructor, the parent class has already been set up correctly.
-As otherwise ,  in constructor you may try to access some variable of parent which has not even set
+**Q- Why super and this has to be first line :question:**  
+The parent class constructor needs to be called before the subclass constructor. This will ensure that if you call any methods on the parent class in your constructor, the parent class has already been set up correctly. As otherwise, in constructor you may try to access some variable of parent which has not been set.  
 
-In cases where a parent class has a default constructor the call to super is inserted for you automatically by the compiler. Since every class in Java inherits from Object, objects constructor must be called somehow and it must be executed first. The automatic insertion of super() by the compiler allows this. Enforcing super to appear first, enforces that constructor bodies are executed in the correct order which would be: Object -> Parent -> Child -> ChildOfChild -> SoOnSoForth
+**_In cases where a parent class has a default constructor the call to super is inserted for you automatically by the compiler. Since every class in Java inherits from Object, objects constructor must be called somehow and it must be executed first. The automatic insertion of super() by the compiler allows this. Enforcing super to appear first, enforces that constructor bodies are executed in the correct order which would be: Object -> Parent -> Child -> ChildOfChild -> SoOnSoForth_**
 
-As for why this() must run first, a constructor that calls this() skips its own super() call (since the this() call calls the super(), so we don't want to do it twice). In addition, we don't know what the arguments to super() in the this() call will be, so we need to wait for the this() call to make the super() call. In keeping with the reasoning from above, we don't want anything to execute prior to the super() call, so we can't do anything before this().
+**As for why this() must run first,** a constructor that calls this() skips its own super() call (since the this() call calls the super(), so we don't want to do it twice). In addition, we don't know what the arguments to super() in the this() call will be, so we need to wait for the this() call to make the super() call. In keeping with the reasoning from above, we don't want anything to execute prior to the super() call, so we can't do anything before this().
 
-Field initialization - it is initializing any variable at the time of initializing the object, outside of any constructor.
-Initialization block - code inside of a block outside of any constructor. /no matter which constructor runs this block is run as if it is first line of any constructor. if multiple initialization block they are run in order.
+### Field Initialization 
+It is initializing any variable at the time of initializing the object, outside of any constructor.  
+
+### Initialization block 
+Code inside of a block outside of any constructor. No matter which constructor runs, this block is executed as if it is the first line of any constructor. If multiple initialization blocks are present, then they are run in order.  
+
 One constructor can call another constructor - Call must be first line
 
-Class Initializers and Constructors: Initialization and Construction Order
-Field initialization -> Initialization block -> Constructor
+### Initialization and Construction Order
+Field initialization -> Initialization block -> Constructor  
+
 REMINDER - Difference b/w static block and initialization block ? 
 
-A Closer Look at Parameters: Overloading Walkthrough
-In overloading the method vs constructor it doesnt have to be the first line of the method
+### A Closer Look at Parameters: Variable Number of Parameters
+- A method can be declared to accept a varying numbers of parameter values
+- Place an ellipse (...) after parameter type
+- Can only be the last type
+- Method receives values as an array
 
-A Closer Look at Parameters: Variable Number of Parameters
-A method can be declared to accept a varying numbers of parameter values
-place an ellipse (...) after parameter type
-Can only be he last type
-Method receives values as an array
+```java
 public void func (int a, int b, float... list) {
-list .lenght() -> would work as list is an array
+	list.lenght() 		//would work as list is an array
 }
-func (1, 2, 1.2) -> [1.2]
-func (p1, p2, 1.3, 2.3) -> [1.3, 2,3], func (p1, p2, 1.3, 3.4, 4.5) -> [1.3, 3.4, 4.5]
-All will work
+func (1, 2, 1.2) 		-> list will be [1.2]
+func (p1, p2, 1.3, 2.3) 	-> list will be [1.3, 2,3] 
+func (p1, p2, 1.3, 3.4, 4.5) 	-> list will be [1.3, 3.4, 4.5]
+```  
 
-A Closer Look at Parameters: Variable Number of Parameters
-
-Summary -
+### A Closer Look at Parameters: Variable Number of Parameters: Summary -
 Parameters are immutable (Changes made to passed value are not visible outsude of method)
-Method can be declared to accept varying numb of parameter values(values received as an array, Must be last parameter)
+Method can be declared to accept varying number of parameter values(values received as an array, Must be last parameter)
 
 ---------------------------------
 
