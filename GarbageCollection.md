@@ -49,7 +49,81 @@ When reference count reaches zero, object can clean itself up. In this we’ll n
 
 **6) Incremental** - Does not look at all the memory all the time during Garbage collect. so kinda like Generational.
 
-So GC are of many types. So we tend to have a mixture of all these.
+So GC are of many types. So we tend to have a mixture of all these.  
+
+Now let's have a look at some of these in detail.  
+
+### Reference Counted Garbage Collection
+In reference counting, we have a problem of circular references where an object1 references object 2 and object2 also references object1 and they have no external reference. This is also known as Island of Isolation.  
+These cyclic references won't be removed, although there is no reference that can be used to access these objects.
+
+### Mark and Sweep GCs
+
+Typically 3 phases -  
+**MARK** - Identifying objects still in use.
+Start from the root set and following other references from nodes of memory, GC mark the live memory.
+In case of cycle in memory and not reference from root set .. No problem because we’ll not be able to reach that cycle as no external references.
+
+![noImage](./img/MarkAndSweep1.png)
+
+![noImage](./img/MarkAndSweep2.png)
+
+**SWEEP** - Removes unused objects.
+
+![noImage](./img/MarkAndSweep3.png)
+
+**COMPACT** - To compact the memory. So physical addresses of memory changed. a references rearranged accordingly in root set
+In java we don't have physical addresses of memory. Objects internally manages them.
+
+![noImage](./img/MarkAndSweep4.png)
+
+
+### Copying GCs 
+
+Things are a little different.
+When memory for a buffer gets full. GC run and mark live memory.
+
+![noImage](./img/CopyingGC1.png)
+
+Then it copies it to other buffer and rearranges references in root set.
+
+![noImage](./img/CopyingGC2.png)
+
+Then removes dead memory from previous memory.
+
+![noImage](./img/CopyingGC3.png)
+
+After the copy and compaction, we end up with a compacted copy of the data in new space data and a (hopefully) large, contiguous area of memory in new space in which we can quickly and easily allocate new objects.
+The next time we do garbage collection (i.e when the space in which we are allocating memory from now gets full), the roles of old space (from space) and new space (to space) will be reversed.
+
+
+### Generational GCs
+
+GENERATIONAL COLLECTORS
+There are different generations - Younger , older.  
+Idea is once an object survives one GC. it is promoted to a different generation.  
+And GC will sweep through the younger generation more often than the older generation.  
+
+
+Let's see how thihs happens:  
+So in young generation we have allocated memory. We have old generation, where there maybe alive maynot be alive.
+Once GC runs, the survivors of that are moved to old generation.
+
+![noImage](./img/GenerationalGC1.png)
+
+![noImage](./img/GenerationalGC2.png)
+
+
+And diff environment have diff number of generations. 
+Java has two: Young and old generations.
+.Net has three.
+
+
+
+
+
+
+
 
 
 
