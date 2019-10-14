@@ -119,10 +119,133 @@ Java has two: Young and old generations.
 .Net has three.
 
 
+## How Garbage Collection Works in the Oracle JVM
+
+### Introducing the Players
+
+![noImage](./img/JVM-Things%20to%20consider.png)
+
+Stop the world events - its when GC pauses the entire application and at that point it collects garbage. We want to try and minimise these events.
+Memory fragmentation - Does GC Defragments memory all at one or leave it for later stage. or it leaves memory fragmented on the basis that it may lead to lower cost than defragment it.
+Throughput - how quickly can GC run, How quickly can it collect garbage and how it effects behaviour of application.
+We also need to think about is if you are running on a multi core machine, So can GC run in parallel with application . Java provides these types of GC as well.
 
 
+### The Basics of Garbage Collection in the Java Virtual Machine
+
+![noImage](./img/JVM-MemoryStructure.png)
+
+![noImage](./img/JVM-oldYoungGeneration.png)
+
+JVM Has Young and old gen.
+
+Young Generation:  
+Eden space - where most initial objects allocated.
+When one GC happens objects are copied to new survivor space and objects in original survivor space also gets copied into this new survival space. So all objects surviving Gc live in one of these survivor spaces.
+
+Old Generation:   
+when an object survives number of GCs. Then runtime decides that that object will essentially live forever. and move it to the old generation.  
+
+Permanent Space - here live things used by Java runtime. Things like class information is stored here. This is never GCied.
 
 
+### Minor Garbage Collects and Major Garbage Collects
+
+Minor Garbage collection - When GC collects objects in Young generation.
+
+![noImage](./img/MinorGarbageCollection1.png)
+
+![noImage](./img/MinorGarbageCollection2.png)
+
+![noImage](./img/MinorGarbageCollection3.png)
+
+![noImage](./img/MinorGarbageCollection4.png)
+
+![noImage](./img/MinorGarbageCollection5.png)
+
+![noImage](./img/MinorGarbageCollection6.png)
+
+![noImage](./img/MinorGarbageCollection7.png)
+
+Major garbage collection - When old generation is full. It is slow as Major GC has to go through large sections of heap. It's also possible that, The memory allocated had been paged. So it has again to be paged back in
+Its also possible to allocate objects directly into the old generation. No direct way of doing it. But we can set option on the JVM called PretenureSizeThreshold. 
+
+![noImage](./img/MajorGarbageCollection1.png)
+
+![noImage](./img/MajorGarbageCollection2.png)
+
+![noImage](./img/MajorGarbageCollection3.png)
+
+![noImage](./img/MajorGarbageCollection4.png)
+
+![noImage](./img/MajorGarbageCollection5.png)
+
+
+### How Allocations Work in the Java Virtual Machine
+How does the allocation of Memory happens in java
+allocate and incr pointer.
+But in multithreaded environment two threads may compete for the same piece of memory. So we'll be needing locks and locks are expensive. So TLABS used..
+
+![noImage](./img/MemoryAllocation1.png)
+
+![noImage](./img/MemoryAllocation2.png)
+
+![noImage](./img/MemoryAllocation3.png)
+
+![noImage](./img/MemoryAllocation4.png)
+
+![noImage](./img/MemoryAllocation5.png)
+
+![noImage](./img/MemoryAllocation6.png)
+
+
+### What Is a Cardtable and How Is It Used in Garbage Collection
+ JVM STACK AREA 
+For every thread, JVM creates a separate stack at the time of thread creation. The memory for a Java Virtual Machine stack does not need to be contiguous. The Java virtual machine only performs two operations directly on Java Stacks: it pushes and pops frames. And stack for a particular thread may be termed as Run – Time Stack. Each and every method call performed by that thread is stored in the corresponding run-time stack including parameters, local variables, intermediate computations, and other data. After completing a method, corresponding entry from the stack is removed. After completing all method calls the stack becomes empty and that empty stack is destroyed by the JVM just before terminating the thread. The data stored in the stack is available for the corresponding thread and not available to the remaining threads. Hence we can say local data is thread safe. Each entry in the stack is called Stack Frame or Activation Record.  
+
+The Java stack is composed of stack frames (or frames). A stack frame contains the state of one Java method invocation. When a thread invokes a method, the Java virtual machine pushes a new frame onto that thread's Java stack. When the method completes, the virtual machine pops and discards the frame for that method.  
+
+
+What does live in live objects mean ?  
+Live roots -  
+1) if reference coming from stack frame they must be live.  
+2) Static variables - not part of an instance . kinda global. So should be kept live.  
+3) if using Java Native interface (JNI) or synch monitors doing locking , Those are also live  
+
+**What objects are kept live during GC ?**  
+So any object with reference form live root is kept live during GC.
+ref from live rooted objects are also kept live
+if refs from old gen to young ones, they are also kept live. Why? Because there might be an object in the old generation whose reference has been destroyed, but since it’s present in the old gen, therefore all the objects in the young generation that are referred from this old gen object must be preserved.
+
+But how. Does it scans old gen space .. No.. Uses CArd tables.
+
+![noImage](./img/LiveobjectsManagement1.png)
+
+![noImage](./img/LiveobjectsManagement2.png)
+
+![noImage](./img/LiveobjectsManagement3.png)
+
+My understanding is that an entry in the card table is set when an object in young generation is allocated that is referenced by something in the old generation
+When a write to a reference (to an object in young generation) happens, These writes go through something called write barrier.
+And this write barries triggers code in JVM, this code updates an entry in a table called card table
+So minor GC sees card table and load the memory corresponding to references present in card table and follow references in that memory , to mark them in use.
+
+![noImage](./img/LiveobjectsManagement4.png)
+
+![noImage](./img/LiveobjectsManagement5.png)
+
+![noImage](./img/LiveobjectsManagement6.png)
+
+![noImage](./img/LiveobjectsManagement7.png)
+
+![noImage](./img/LiveobjectsManagement8.png)
+
+![noImage](./img/LiveobjectsManagement9.png)
+
+
+###  Serial Versus Parallel Garbage Collectors
+
+(https://www.cubrid.org/blog/understanding-java-garbage-collection)  
 
 
 
