@@ -29,3 +29,25 @@ THE GC PROMISE
   - no promise about dead objects.  
 So dead objects may be present in memory. BUT no live object will be deleted or reclaimed. 
 We don't know when GC will run, whether it will run before our application ends or not.
+
+
+### Different Types of Garbage Collection
+There are different types of GARBAGE COLLECTORS -
+**1) Do nothing** - not freeing any memory. Just guarenting that no live objects will be reclaimed.
+
+**2) Reference Counting** - for a variable two functions - 
+    1) addReference - increment reference count . 
+    2) release - decrements reference count . When reference count reaches zero. Object can clean itself up.
+In this we’ll not be able to delete cyclic references.
+
+**3) Mark and sweep** - Has 2 phases .. a) Mark phase walks through all live memory marking it alive and sweep phase removes all unused memory.
+this leads us to memory which can be fragmented.
+Compaction is done by rearranging the marked memory.
+
+**4) Copying** - Work hand in hand with mark and sweep garbage collection. Marked objects are copied to a buffer (new space) before sweep phase runs on the old space, hence the memory is no longer fragmented.
+
+**5) Generational** - if an object survives one GC , then GC would not look at it again for a while. This improves performance of GC.
+
+**6) Incremental** - does not look at all the memory all the time during Garbage collect. so kinda like Generational.
+
+SO GC are of many types. So we tend to have a mixture of all these.
