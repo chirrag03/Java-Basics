@@ -64,7 +64,10 @@ Typically 3 phases -
 Start from the root set and following other references from nodes of memory, GC mark the live memory.
 In case of cycle in memory and not reference from root set .. No problem because we’ll not be able to reach that cycle as no external references.
 
+```
 <img src="./img/MarkAndSweep1.png" width="700"/> <img src="./img/MarkAndSweep1.png" width="700"/>
+![noImage](./img/MarkAndSweep1.png)  ![noImage](./img/MarkAndSweep1.png) 
+```
 
 ![noImage](./img/MarkAndSweep1.png)  
 
