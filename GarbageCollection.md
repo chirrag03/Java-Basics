@@ -247,6 +247,39 @@ So minor GC sees card table and load the memory corresponding to references pres
 
 (https://www.cubrid.org/blog/understanding-java-garbage-collection)  
 
+Now we look at different types of GCs
+Serial , Parallel and parallel old collector work in same way. Eden , survivor . old space and mark and sweep algo and copy algo.
+Where they differ is the amount of concurrency each collector has.
+1) Serial collector
+Single threaded - it means it is a stop the world collector i.e we stop everything and run GC.  
+
+![noImage](./img/SerialCollector.png)
+
+2) Parallel collector - Multiple threaded for minor collection and single for major.  So less down time i.e less stop the world time.  
+
+![noImage](./img/parallelCollector.png)
+
+3) Parallel old collector - multiple for both.  
+
+![noImage](./img/ParallelOldCollector.png)
+
+4) concurrent mark and sweep
+Only collects old space. Only collect during major GC.
+no bump the pointer allocation
+fragments the heap and manages sets of free lists for each of the fragments. It tries to allocate the object in one of these fragments and so it has to check these free lists and update these free lists. So it causes the collector to run more slowly.
+however these are designed to be low latency collectors. So its throughput is much higher with this than parallel and parallel old.
+
+
+![noImage](./img/ConcurrentMarkAndSweep1.png)
+
+![noImage](./img/ConcurrentMarkAndSweep%20Before%20GC.png)
+
+![noImage](./img/ConcurrentMarkAndSweep%20Before%20GC.png)
+
+![noImage](./img/ConcurrentMarkAndSweep%20After%20GC%20CMS.png)
+
+![noImage](./img/ConcurrentMarkAndSweep2.png)
+
 
 
 
