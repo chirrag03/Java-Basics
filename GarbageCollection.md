@@ -64,10 +64,7 @@ Typically 3 phases -
 Start from the root set and following other references from nodes of memory, GC mark the live memory.
 In case of cycle in memory and not reference from root set .. No problem because we’ll not be able to reach that cycle as no external references.
 
- <tr>
-    <td> <img src="./img/MarkAndSweep1.png" alt="Drawing" style="width: 250px;"/> </td>
-    <td> <img src="./img/MarkAndSweep1.png" alt="Drawing" style="width: 250px;"/> </td>
-    </tr>
+<img src="./img/MarkAndSweep1.png" width="200"/> <img src="./img/MarkAndSweep1.png" width="300"/>
 
 ![noImage](./img/MarkAndSweep1.png)  
 
