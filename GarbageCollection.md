@@ -280,6 +280,136 @@ however these are designed to be low latency collectors. So its throughput is mu
 
 ![noImage](./img/ConcurrentMarkAndSweep2.png)
 
+It goes through different phases -
+1) Initial mark - Mark objects taken from root refs. It does not traverse the graph . it only takes direct child of roots, So that we have minimal stop the world time.
+Now we need to traverse these nodes. But we can do that concurrently with application (i.e Java threads).
+
+2) Concurrent mark - Traverse object graph looking for live objects from objects from previous phase. ANY OBJECT (from young gen to old gen) ALLOCATION MADE DURING THIS PHASE IS AUTOMATICALLY MARKED LIVE.
+
+3) Remark - In the remark step, the objects that were newly added or stopped being referenced (because java threads were running concurrently) in the concurrent mark step are checked. It has to be stop the world to guarantee no more objects created while this step is  executing. Happens quickly.
+
+4) concurrent sweep - collect object not marked.i.e after previous phase it knows objects that were not marked i.e these nodes must behaving flag of “NOT MARKED . So does not matter even if new objects are created during this process. It will only collect these unmarked  objects. 
+
+5) Resetting - resets everything for next round.
 
 
+### The G1 Garbage Collector
+G1 Garbage collector - planned replacement of CMS
+instead of having Eden and tenure OR
+Young and old memory. We now break all memory space into regions
+
+https://www.dynatrace.com/news/blog/understanding-g1-garbage-collector-java-9/
+
+Granted, if one wants to collect the entire heap, the G1 has to do the same amount of work as any other GC, but this is where the G1 shines because it doesn’t have to collect the entire heap. It doesn’t even have to collect an entire generation. It can select any number or combination of regions to collect. To optimize collection time, it always selects regions that are full (or almost full) of garbage and thereby minimizes the amount of work it has to do to free heap space for subsequent allocations. Other GCs always collect an entire generation, meaning their run-time complexity often depends on the total heap size. In the G1 case however, this depends on the amount of live objects because memory can be freed without handling an entire generation. Ideally, when the heap is big enough, some regions will always be completely full of garbage, making it easy to collect them.
+
+In the Java world, we already know about concurrent collections from the Concurrent Mark & Sweep GC (CMS). However, the CMS can only collect the old generation concurrently, it still needs to halt the application to collect the young generation.
+
+The G1 only stops the application at the beginning of the GC to do some quick bookkeeping before it immediately resumes the application. This phase is called the “Initial Mark”. Then, while the application is executing, the GC will follow all references and mark life objects (“Concurrent Mark” phase). When this is done, the application is suspended again, and a final cleanup is made (“Final Mark” phase) before selecting a few regions and collecting them (“Evacuation” phase). As the evacuation phase is fast, especially for large heaps, the G1 usually outperforms other GCs in terms of suspension time of the executed application.
+
+
+![noImage](./img/G1Collector1.png)
+
+![noImage](./img/G1Collector2.png)
+
+![noImage](./img/G1Collector3.png)
+
+![noImage](./img/G1Collector4.png)
+
+![noImage](./img/G1Collector5%20Young%20GC1.png)
+
+![noImage](./img/G1Collector5%20Young%20GC2.png)
+
+![noImage](./img/G1Collector6%20Old%20GC1.png)
+
+![noImage](./img/G1Collector6%20Old%20GC2.png)
+
+
+
+## Java Reference Classes
+
+### Introduction to Java Reference Types
+
+Special references available
+special because JVM handles them differently and is aware of their existence.
+if coming to out of memory exception then softly referenced objects will be GCied
+Soft reference is able to keep object alive under certain circumstances but weak reference will never keep an object alive. So whenever GC runs, then an object with no strong and Soft reference will be GCied.
+
+![noImage](./img/Java%20references%20intro1.png)
+
+![noImage](./img/Java%20references%20intro2.png)
+
+
+### How Java References Work
+
+
+![noImage](./img/Using%20Reference%20types1.png)
+
+![noImage](./img/Using%20Reference%20types2.png)
+
+![noImage](./img/Using%20Reference%20types3.png)
+
+![noImage](./img/Using%20Reference%20types4.png)
+
+![noImage](./img/Using%20Reference%20types5.png)
+
+![noImage](./img/Using%20Reference%20types6.png)
+
+
+How these ref work
+Person person = new Person ();
+WeakReference<Person> wr = new WeakReference<Person>(person);
+wr is reference to an object of type WeakReference <Person> and this object internally has a weak reference to Person object (shown as dotted line in pic) which has a strong reference person pointing to it.
+Now if i do Person p = wr.get()
+I will get a strong reference to Person object
+
+now if i do person = null then we Person object now has no strong reference. But we still have a weak reference. and now if we do wr.get() it will give strong reference to it. So as far as there is  no GC till that time  weakReferenceObject can be used to get a strong reference to Person object.
+However if we did GC just after making person = null;
+person=null;
+System.gc();
+at this point weakReference object is not pointing to anything.
+so if we do wr.get() , it returns null
+
+
+### How Different Reference Types Used in Your Code
+
+Usages of reference types
+
+**Weak reference** - used to associate metadata with our types.. need not be real metadata data but some extra data that we need to the type.
+ex - if we have a type marked as final we can't extend it. But in certain circumstances we would like to extend it and add extra fields to it. and weak hash map and weak Reference provide us the way to do that.  
+
+Weak Hash Map-  
+to have meta data for types which are final.  
+hash map in which key is a weak reference to the object (which is of type final) and value is reference to metaData.  
+So if object has no strong references, weak reference to that object which is key now is released and the meta data corresponding to that is also released  
+
+What if we have created HashMap with key as normal object to put meta data ? What disaster have we done????   As we have put key as a strong reference we would not be able to GC the object referenced by key. This is the problem.
+
+
+![noImage](./img/WeakHashMap1.png)
+
+![noImage](./img/WeakHashMap2.png)
+
+![noImage](./img/WeakHashMap3.png)
+
+![noImage](./img/WeakHashMap4.png)
+
+![noImage](./img/WeakHashMap5.png)
+
+![noImage](./img/WeakHashMap6.png)
+
+![noImage](./img/WeakHashMap7.png)
+
+![noImage](./img/WeakHashMap8.png)
+
+
+**Soft reference** - used for caching
+Idea is that when we have a large object (maybe an image object that we require to get from a server) , I create a strong reference to it AND a soft reference to it.
+When object not needed I can make strong reference to null.
+So i can retrieve this object if i need to by going through soft reference. In case of memory pressure this will go away and when i call get on soft reference i will return null.
+
+Soft reference caching - ( SEE PICS ) not that good as GC manages everything . so we have no control over cache. We cannot used LRU or MRU list. So control of when an element will leave the cache is not our hands.
+So soft references can act only as simple cache.. not good for caching in general.
+
+
+**Phantom reference** -
 
