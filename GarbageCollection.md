@@ -274,7 +274,7 @@ however these are designed to be low latency collectors. So its throughput is mu
 
 ![noImage](./img/ConcurrentMarkAndSweep%20Before%20GC.png)
 
-![noImage](./img/ConcurrentMarkAndSweep%20Before%20GC.png)
+![noImage](./img/ConcurrentMarkAndSweep%20After%20GC.png)
 
 ![noImage](./img/ConcurrentMarkAndSweep%20After%20GC%20CMS.png)
 
