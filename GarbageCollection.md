@@ -412,4 +412,58 @@ So soft references can act only as simple cache.. not good for caching in genera
 
 
 **Phantom reference** -
+least used reference. allows us to interact with GC. We can use this to monitor when an object is being collected and do some extra work when that object is being collected. This allows us to interrupt the GC. 
+
+finalize in java - wherever u can use finalize u can use phantom reference . finalizers are expensive
+
+When we call get method on phantom refs they always return null.
+Used instead of finalizers which can be expensive as when an object is constructed the runtime has to know about it as it need to call finalize method on it once the object is no longer reachable. So it means there is a code that runs that tells The GC that we have an object that is finalizable. There is a reference to that finalizable object kept by the runtime. So these objects will survive at least one GC as the runtime itself goes to reference these things and runtime must at some point call finalize method before finally releasing the object.
+
+We have more control over when the final clean up of the object happens. It's not under garbage collector, it more under our control.
+
+![noImage](./img/phantomReference1.png)
+
+![noImage](./img/phatomReference2.png)
+
+![noImage](./img/phatomReference3.png)
+
+![noImage](./img/phatomReference4.png)
+
+![noImage](./img/phatomReference5.png)
+
+![noImage](./img/phatomReference6.png)
+
+![noImage](./img/phatomReference7.png)
+
+
+**Using ReferenceQueue**  
+When creating an object we can pass reference queue as a parameter. But when creating phantom refs queue is necessary to pass as param.
+Let's say we make a weak reference for an object. when an object has no strong refs attached to it, weak refs are enqueued to queue.
+useful to attach cleanup mechanism
+RefQueue has poll and remove method
+Poll - we are polling the queue. if has any object return it or return null.
+Remove - it blocks, untill therre is reference on the queue. we can block for some few second using timeout in remove too. it returns null if no ref type till the timeout.
+
+can attach clean up code. When we dequeue an object we call its cleanup method. at this time we know object has been garbage collected and we know that we can cleanup any data we want.
+When system is GCied , weak reference is added to ref queue if no strong refs is attached to object.
+We can do the cleanup mechanim on a background thread using executorService.
+
+
+Rehesyamain link https://dzone.com/articles/weak-soft-and-phantom-references-in-java-and-why-they-matter
+
+![noImage](./img/Referencequeue1.png)
+
+![noImage](./img/Referencequeue2.png)
+
+![noImage](./img/Referencequeue3.png)
+
+![noImage](./img/Referencequeue4.png)
+
+![noImage](./img/Referencequeue5.png)
+
+![noImage](./img/Referencequeue6.png)
+
+![noImage](./img/Referencequeue7.png)
+
+
 
