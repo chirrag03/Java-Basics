@@ -143,6 +143,8 @@ Young Generation:
 Eden space - where most initial objects allocated.
 When one GC happens objects are copied to new survivor space and objects in original survivor space also gets copied into this new survival space. So all objects surviving Gc live in one of these survivor spaces.
 
+![noImage](./img/JVM-%20Young%20generation.png)
+
 Old Generation:   
 when an object survives number of GCs. Then runtime decides that that object will essentially live forever. and move it to the old generation.  
 
@@ -323,6 +325,14 @@ The G1 only stops the application at the beginning of the GC to do some quick bo
 
 ![noImage](./img/G1Collector6%20Old%20GC2.png)
 
+
+### Which Collector to use?
+
+![noImage](./img/Differrent%20GCs1.png)
+
+![noImage](./img/WhichCollector1.png)
+
+![noImage](./img/WhichCollector2.png)
 
 
 ## Java Reference Classes
