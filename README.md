@@ -1299,8 +1299,9 @@ public Iterator < Person > iterator() {
 5) Anonymous classes are declared as part of their creation and used as  class extensions  
 
 
-
-
+When reading this again, make required notes from the two links below:
+https://beginnersbook.com/2013/05/inner-class/
+https://stackoverflow.com/questions/758570/is-it-possible-to-make-anonymous-inner-classes-in-java-static
 
 
 
