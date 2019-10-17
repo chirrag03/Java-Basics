@@ -141,28 +141,32 @@ We also need to think about is if you are running on a multi core machine, So ca
 
 ![noImage](./img/JVM-MemoryStructure.png)
 
-![noImage](./img/JVM-oldYoungGeneration.png)
+JVM has a 'Young Generation' and 'Old Generation'.  
 
-JVM Has Young and old gen.
+**Young Generation:**  
+Eden space - Most initial objects are allocated in this space.
+Survivor Spaces - Young generation has two 'survivor' spaces
+Objects that survive a GC are copied to a new survivor space and objects in original survivor space also gets copied into this new survival space. So all the objects surviving GC live in one of these survivor spaces i.e. only one survivor space is in use at a time.
 
-Young Generation:  
-Eden space - where most initial objects allocated.
-When one GC happens objects are copied to new survivor space and objects in original survivor space also gets copied into this new survival space. So all objects surviving Gc live in one of these survivor spaces.
+**Old Generation:**    
+When an object survives number of GCs. Then runtime decides that that object will essentially live forever and hence moves it to the old generation.  
 
-![noImage](./img/JVM-%20Young%20generation.png)
+**_Most objects live for a very short time. The 'turtle' theory of Garbage collection i.e. you die young or live 'forever'._**  
 
-Old Generation:   
-when an object survives number of GCs. Then runtime decides that that object will essentially live forever. and move it to the old generation.  
-
-Permanent Space - here live things used by Java runtime. Things like class information is stored here. This is never GCied.
+**Permanent Space**   
+Here live things used by Java runtime. Things like class information is stored here. This is never GCied.
 
 
 ### Minor Garbage Collects and Major Garbage Collects
 
-Minor Garbage collection - When GC collects objects in Young generation.
+**Minor Garbage collection** - When GC collects objects in Young generation. How this works?  
 
-![noImage](./img/MinorGarbageCollection1.png)
-
+- Objects that were allocated into Eden space
+   When GC runs, objects from Eden space are copied to 'newer' survivor space   
+   Objects from 'older' survivor space also copied to 'newer' survivor space  
+   Survivor spaces are swapped  
+- Any new object created is allocated to Eden space.
+   
 ![noImage](./img/MinorGarbageCollection2.png)
 
 ![noImage](./img/MinorGarbageCollection3.png)
@@ -175,13 +179,18 @@ Minor Garbage collection - When GC collects objects in Young generation.
 
 ![noImage](./img/MinorGarbageCollection7.png)
 
-Major garbage collection - When old generation is full. It is slow as Major GC has to go through large sections of heap. It's also possible that, The memory allocated had been paged. So it has again to be paged back in
-Its also possible to allocate objects directly into the old generation. No direct way of doing it. But we can set option on the JVM called PretenureSizeThreshold. 
+**Major garbage collection**  
+- Triggered when the old/tenured generation is full. 
+- Collects old and young generations (although this is really a 'full GC'). 
+- It is slow as Major GC has to go through large sections of heap. It's also possible that, The memory allocated had been paged. So it has again to be paged back in.
+- Its also possible to allocate objects directly into the old generation. No direct way of doing it. But we can set option on the JVM called PretenureSizeThreshold.  
 
-![noImage](./img/MajorGarbageCollection1.png)
-
-![noImage](./img/MajorGarbageCollection2.png)
-
+When will JVM promote the objects to old generation :question:  
+- After a certain number of garbage collects.
+- If survivor space is full.
+- If JVM has been told to always create objects in old space
+    **-XX:+AlwaysTenure** flag to JVM  
+    
 ![noImage](./img/MajorGarbageCollection3.png)
 
 ![noImage](./img/MajorGarbageCollection4.png)
