@@ -511,6 +511,7 @@ public class CargoOnlyPilot extends Pilot {
     }
 }
 ```
+**What is the difference between an interface and an abstract class?**  
 
 ### Class Inheritance: Inheritance and Constructors
 
