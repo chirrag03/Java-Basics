@@ -16,29 +16,44 @@ Java code compiles to .class files (having byte code which JVM understands). The
 It should be able to locate them. So it uses something called classpath.  
 
 **What is the classpath ?**  
-This is a collection of locations maybe on the file system, maybe on the network, maybe in a database, where classes (.class files) are held and Java runtime can load classes from anywhere on this classpath.  
+This is a collection of locations maybe on the file system, maybe on the network, maybe in a database, where classes (.class files) are held and Java runtime can load classes from anywhere on this classpath. 
+
 These are various ways of setting classpath. 
-  - Setting the classpath globally (not a good idea).
-  - Its better to set the class path locally when we run the Java application.
+  - Globally (not a good idea).
+  - Locally when we run the Java application (better).
 
 
 ## WHAT HAPPENS BEFORE COMPILATION
 Above is the scene after the files are compiled at a location. But what is the scene when file is not compiled i.e it is in the form of “.java“.
 
-- The package name inside of a java class determines the folder structure inside of folder where compiled files(.class files) will go.  (Name of a class is package.NameOFClass)
-- Whenever we start compiling code , it starts compiling code starting from a file mentioned as Main file. Lets call it Main.java
-- Lets say we have Main.java defining the package “com.pluralsight” and using class named “com.mantiso.Helper” inside of a folder src/com/mantiso/Helper.java Main.java can be anywhere
+- The package name inside of a java class determines the folder structure at the location where compiled files(.class files) will go.  (Name of a class is package.NameOFClass)
+- Compiler starts compiling code starting from a file mentioned as Main file. Lets call it Main.java
+- Lets say we have Main.java defined in the package “com.pluralsight” and uses class named “com.mantiso.Helper” inside of a folder src/com/mantiso/Helper.java Main.java can be anywhere
 - So we run a command to compile Main.java and put compiled classes in a folder called “classes” which can be anywhere
 
-**javac -d $pathToClasses -sourcepath $pathToSourceFolder $pathToMain.java**  
+**javac -d $pathToClassesFolder -sourcepath $pathToSourceFolder $pathToMain.java**  
 
 Lets say we have 
 - Main file - Main.java
-- Folder in which compiled classes will go to - folder1/folder2/classes
-- folder1/folder2/project/src/com/mantiso/Helper.java and it is used as “com.mantiso.Helper” in Main.java.
+- Folder in which compiled classes will go - folder1/folder2/classes
+- Location of Helper.java  
+> folder1/folder2/project/src/com/mantiso/Helper.java and it is used as “com.mantiso.Helper” in Main.java.
 - then command would be (and we run command from inside of folder 1).. then command would be  
     javac -d folder2/classes -sourcepath folder2/project/src ../Main.java
 
+```
+└───Main.java  
+│
+└───folder1  
+│   └───folder2 
+│   |   └───project  
+│   |   |   └───src  
+│   |   |       └───com
+│   |   |           └───mantiso  
+│   |   |               └───Helper.java 
+│   |   |
+|   |   └───classes 
+```
 
 javac command understands package in terms of source folder. First of all it starts compiling the file mentioned in the file you are mentioning as your main file (lets say mentionedMainFile). So if import com.PackageName.ClassName is there in main file then javac checks from directory relative to sourcepath  and checks whether a file with name com.PackageName.ClassName exists or not.  
 
