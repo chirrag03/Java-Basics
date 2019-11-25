@@ -34,12 +34,17 @@ Above is the scene after the files are compiled at a location. But what is the s
 **javac -d $pathToClassesFolder -sourcepath $pathToSourceFolder $pathToMain.java**  
 
 Lets say we have 
-- Main file - Main.java
-- Folder in which compiled classes will go - folder1/folder2/classes
-- Location of Helper.java  
-> folder1/folder2/project/src/com/mantiso/Helper.java and it is used as “com.mantiso.Helper” in Main.java.
-- then command would be (and we run command from inside of folder 1).. then command would be  
-    javac -d folder2/classes -sourcepath folder2/project/src ../Main.java
+- Main file 
+> Main.java
+
+- Folder in which compiled classes will go 
+> folder1/folder2/classes
+
+- Location of Helper.java that will be imported as “com.mantiso.Helper” in Main.java
+> folder1/folder2/project/src/com/mantiso/Helper.java 
+
+- Run compile command from inside of folder 1  
+> javac -d folder2/classes -sourcepath folder2/project/src ../Main.java
 
 ```
 └───Main.java  
@@ -55,24 +60,41 @@ Lets say we have
 |   |   └───classes 
 ```
 
-javac command understands package in terms of source folder. First of all it starts compiling the file mentioned in the file you are mentioning as your main file (lets say mentionedMainFile). So if import com.PackageName.ClassName is there in main file then javac checks from directory relative to sourcepath  and checks whether a file with name com.PackageName.ClassName exists or not.  
+javac command understands package in terms of source folder. 
+First of all it starts compiling the Main file mentioned in the command. Here it is Main.java  
 
-For this it sees whether package named “com.PackageName” exists or not .. if not it gives error that com.PackageName does not exist . for it to exist there should be folder structure com/PackageName after source folder.  If this happens then there should a file called ClassName.java inside of it inside of which package mentioned should also be “com.PackageName” as each java file tells its name using its packageDeclaration. If in file com/PackageName/ClassName ,,, package name mentioned is com.AnotherPackageName then it is saying that my name is com.AnotherPackageName.ClassName…. Not com.PackageName.ClassName .. So javac would say …. Bad source file com/PackageName.ClassName .. bad because file does not contain “com.PackageName.ClassName” class (as it contains  com.AnotherPackageName.ClassName)   
+Level I Verification:  
+If import com.PackageName.ClassName is there in main file then javac starts checking from directory relative to sourcepath and checks whether a file with name com.PackageName.ClassName exists or not.  
 
-com.Pluralsight.SomeClass.java in source folder goes in  …. coom/PluralSight/SomeClass.class in class folder  
+For this it first checks whether package named “com.PackageName” exists or not. (**NOTE:** for it to exist there should be folder structure com/PackageName after the source folder)  
+If the folder structure does not exist then it gives error that com.PackageName does not exist . 
+
+If it exists then there should be a file called ClassName.java.
+
+Level II Verification: 
+Inside of the file ClassName.java, the package mentioned should also be “com.PackageName” as each java file tells its name using its packageDeclaration. 
+
+If the package name mentioned is com.AnotherPackageName then it is saying that my name is com.AnotherPackageName.ClassName…. Not com.PackageName.ClassName .. So javac would say …. Bad source file com/PackageName.ClassName .. bad because file does not contain “com.PackageName.ClassName” class (as it contains com.AnotherPackageName.ClassName)   
+
+com.Pluralsight.SomeClass.java in source folder goes in  …. com/PluralSight/SomeClass.class in class folder  
 
 ## WHAT HAPPENS AFTER CLASS IS COMPILED.. WE RUN THE APPLICATION
 
-When running the application I.e we run a command “java” to run the application …. we need CLASSPATH. … i.e to run machine code java needs the location where all the .class files are located so that it can load those files in the machine. That location is the CLASSPATH.
+When running the application i.e we run a command “java” to run the application …. we need CLASSPATH. … i.e to run machine code java needs the location where all the .class files are located so that it can load those files in the machine. That location is the CLASSPATH.
 
-- we can set CLASSPATH globally by set CLASSPATH="path of folder containing .class files i.e ‘classes’ in our case" and run java command which needs two things 1) CLASSPATH and 2) the name of the Main class which has main function here com.pluralsight.Main.
+- we can set CLASSPATH globally by set CLASSPATH="path of folder containing .class files i.e ‘classes’ in our case"  
+  Run java command which needs two things 1) CLASSPATH and 2) the name of the Main class which has main function here com.pluralsight.Main.
+> java -cp classes com.pluralsight.Main
+  
 - If CLASSPATH is not given then it takes the classpath from environment variable i.e the CLASSPATH which is set globally.
-- The command we run is java com.pluralsight.Main
-- But setting global path would affect every application on the system. So better is to provide classpath while running java  .. 
-            java -cp $pathToClasses $packageName.ClassName
+  Run java command which just needs the name of the Main class which has main function here com.pluralsight.Main.
+> java com.pluralsight.Main
+  
+- But setting global path would affect every application on the system. So better is to provide classpath while running java 
 
-- So e.g
-  java -cp classes com.pluralsight.Main
+            
+  java -cp $pathToClasses $packageName.ClassName
+
   we can also provide multiple classpaths separating them by ":"
   java -cp $pathToClasses1:$pathToClasses2 $packageName.ClassName
 
@@ -82,14 +104,14 @@ It is just that java will load classes from these class paths. Lets say i use a 
 So lets make a jar file and put some class in it and move it somewhere else.
 
 So let us say we create jar file for Helper.java by using command 
-jar cvf helper.jar src/com/mantiso/Helper.class
-This will create Helper.jar in currentDirectory (which is like a folder containing com/mantiso/Helper.class This structure inside jar file is made using package declaration inside Helper.class)
+jar cvf Helper.jar src/com/mantiso/Helper.class
+This will create Helper.jar in currentDirectory (which is like a folder containing com/mantiso/Helper.class **This structure inside jar file is made using package declaration inside Helper.class**)
 
 lets move it somewhere else to ../lib
 and now delete Helper.class
 del classes/com/mantiso/Helper.class
 
-So there is no Helper class in com/mantiso .. where is it then ….. In the jar file. So if we run 
+So there is no Helper class in classes/com/mantiso (.. where is it then ….. In the jar file). So if we run 
 java -cp classes com.pluralsight.Main   
 This would return error as it will not find com.mantiso.Helper
 
@@ -100,12 +122,12 @@ and code runs
 Why … as class named com.mantiso.Helper.class is in Helper.jar which is kinda folder. Which contains com/mantiso/Helper.class .
 
 
+**What did we learn :question:**  
+We have seen that java class are compiled using javac command (using a MainFile MentionedMain.java) and compiled into a folder… and run using java command using a Main .class file and classPath where java would find classes needed for our code (which are compiled earlier using javac command).
 
-So we have seen that java class are compiled using javac command (using a MainFile MentionedMain.java) and compiled into a folder… and run using java command using a Main .class file and classPath where java would find classes needed for our code (which are compiled earlier using javac command).
 
 
-
-So Now what else we will study ..
+**What else we will study :question:**  
 
 ClassLoading basics
 Writing our own classloader
