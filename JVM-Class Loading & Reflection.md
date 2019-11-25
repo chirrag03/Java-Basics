@@ -63,7 +63,7 @@ Lets say we have
 javac command understands package in terms of source folder. 
 First of all it starts compiling the Main file mentioned in the command. Here it is Main.java  
 
-Level I Verification:  
+**Level I Verification:**  
 If import com.PackageName.ClassName is there in main file then javac starts checking from directory relative to sourcepath and checks whether a file with name com.PackageName.ClassName exists or not.  
 
 For this it first checks whether package named “com.PackageName” exists or not. (**NOTE:** for it to exist there should be folder structure com/PackageName after the source folder)  
@@ -71,7 +71,7 @@ If the folder structure does not exist then it gives error that com.PackageName 
 
 If it exists then there should be a file called ClassName.java.
 
-Level II Verification: 
+**Level II Verification:** 
 Inside of the file ClassName.java, the package mentioned should also be “com.PackageName” as each java file tells its name using its packageDeclaration. 
 
 If the package name mentioned is com.AnotherPackageName then it is saying that my name is com.AnotherPackageName.ClassName…. Not com.PackageName.ClassName .. So javac would say …. Bad source file com/PackageName.ClassName .. bad because file does not contain “com.PackageName.ClassName” class (as it contains com.AnotherPackageName.ClassName)   
