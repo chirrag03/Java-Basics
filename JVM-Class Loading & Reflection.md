@@ -136,3 +136,52 @@ Hot deploying Java code
 Understanding Java reflection
 Using reflection to implement a simple IOC container
 
+
+## CLASSLOADING
+
+**What is classLoading ?**   
+- ClassLoading is loading of byte code of class definitions into JVM by classLoaders who know how to load them. 
+- Classloaders come with JRE .
+- The smallest unit of execution that gets loaded by a ClassLoader is the Java class file. 
+- A class file contains the byte code representation of a Java class, which has the executable bytecodes and references to other classes used by that class, including references to classes in the Java API.  
+
+Stated simply, a ClassLoader locates the bytecodes for a Java class that needs to be loaded, reads the bytecodes, and creates an instance of the java.lang.Class type(or class). This makes the class available to the JVM for execution. Initially when a JVM starts up, nothing is loaded into it. The class file of the program being executed is loaded first and then other classes and interfaces are loaded as they get referenced in the bytecode being executed. The JVM thus exhibits lazy loading, i.e., loading classes only when required, so at start-up the JVM doesn't need to know the classes that would get loaded during runtime. Lazy loading plays a key role in providing dynamic extensibility to the Java platform. The Java runtime can be customized in interesting ways by implementing a custom ClassLoader in a program, as I'll discuss later.
+
+So what must be happening is JVM make a Class Object and using that... every instance of that object must be created…. CHECK.
+
+**What will we study ?**
+- **Core classes** (default classes like String), How they are loaded. 
+- **Extension classes** - classes that oracle want to ship with every class but not part of core classes
+ OR
+classes shipped by “third party” that we want to be shipped with every Java application
+- **Delegation model in java** - when a classloader attempts to load a class it delegate its call to parent classloader which call its parent classloader and so on until root at which point it cascades back till some classloader can load the class.
+- **Displaying this delegation**
+
+
+### Core Java Classes And extension classes
+Except from classpath there are two other locations that java loads its classes from.
+1) inside the **"jre"** directory we have **rt.jar(runtime.jar)** which has basic files like String.class etc i.e the core classes.
+2) in the **"ext"** folder inside "jre" directory , we have jar files having java classes used by many apps but aren’t part of core libraries (i.e rt.jar)
+
+**So jre/rt.jar and jre/ext/somejarFiles.jar are loaded except CLASSPATH**   
+
+Note: So ….  if we move lib/helper.jar to ext folder and remove lib/helper.jar from classpath then code would work fine  
+
+Lets say we run **java -cp classes com.pluralsight.Main**
+- While "COMPILING" if we remove com/mantiso.Helper.java then it will say com.mantiso.Helper not found.
+BUT  
+if we put helper.jar in "ext" (extension) folder then even after removing com/mantiso/Helper.java,  code compiles successfully, using helper.jar in "ext" folder.
+
+There are **two extension directories possibly**, one used by the Java runtime environment  (JRE) and one used by the java JDK (inside jre folder in JDK which also includes src.zip containg sourcecode e.g String.java) and these could be in different places. the appropriate one will be picked up depending upon the version of java you use.
+
+we can also set the extension directory path explicitly.
+**java -cp $classpath -D java.ext.dirs=$pathToExtnsionFolder com.pluralsight.Main**
+
+So in all , classloaders have ‘CLASSPATH’ and ‘rt.jar’ and ‘ext’ folder to load  the compiled  class files from. And we can specify extension folder ‘ext’ folder location also explicitly.
+
+**So … where are we till now in the course.**
+So we have studied that there are classloaders who load the files in JVM(reads byte code of class files and create java.lang.Class instance). and where from these classloaders find the files to load. Now we will study that there are different types of classloaders and which classloader loads which class.
+
+
+
+
