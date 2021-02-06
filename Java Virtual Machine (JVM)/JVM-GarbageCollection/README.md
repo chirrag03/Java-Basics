@@ -64,18 +64,18 @@ Typically 3 phases -
 Start from the root set and following other references from nodes of memory, GC mark the live memory.
 In case of cycle in memory and not reference from root set .. No problem because we’ll not be able to reach that cycle as no external references.
 
-![noImage](./img/MarkAndSweep1.png) 
+![noImage](./img_metadata/MarkAndSweep1.png) 
 
-![noImage](./img/MarkAndSweep2.png)
+![noImage](./img_metadata/MarkAndSweep2.png)
 
 **SWEEP** - Removes unused objects.
 
-![noImage](./img/MarkAndSweep3.png)
+![noImage](./img_metadata/MarkAndSweep3.png)
 
 **COMPACT** - To compact the memory. So physical addresses of memory changed. a references rearranged accordingly in root set
 In java we don't have physical addresses of memory. Objects internally manages them.
 
-![noImage](./img/MarkAndSweep4.png)
+![noImage](./img_metadata/MarkAndSweep4.png)
 
 
 ### Copying GCs 
@@ -83,15 +83,15 @@ In java we don't have physical addresses of memory. Objects internally manages t
 Things are a little different.
 When memory for a buffer gets full. GC run and mark live memory.
 
-![noImage](./img/CopyingGC1.png)
+![noImage](./img_metadata/CopyingGC1.png)
 
 Then it copies it to other buffer and rearranges references in root set.
 
-![noImage](./img/CopyingGC2.png)
+![noImage](./img_metadata/CopyingGC2.png)
 
 Then removes dead memory from previous memory.
 
-![noImage](./img/CopyingGC3.png)
+![noImage](./img_metadata/CopyingGC3.png)
 
 After the copy and compaction, we end up with a compacted copy of the data in new space data and a (hopefully) large, contiguous area of memory in new space in which we can quickly and easily allocate new objects.
 The next time we do garbage collection (i.e when the space in which we are allocating memory from now gets full), the roles of old space (from space) and new space (to space) will be reversed.
@@ -109,9 +109,9 @@ Let's see how thihs happens:
 So in young generation we have allocated memory. We have old generation, where there maybe alive maynot be alive.
 Once GC runs, the survivors of that are moved to old generation.
 
-![noImage](./img/GenerationalGC1.png)
+![noImage](./img_metadata/GenerationalGC1.png)
 
-![noImage](./img/GenerationalGC2.png)
+![noImage](./img_metadata/GenerationalGC2.png)
 
 
 And diff environment have diff number of generations. 
@@ -139,7 +139,7 @@ We also need to think about is if you are running on a multi core machine, So ca
 
 ### The Basics of Garbage Collection in the Java Virtual Machine
 
-![noImage](./img/JVM-MemoryStructure.png)
+![noImage](./img_metadata/JVM-MemoryStructure.png)
 
 JVM has a 'Young Generation' and 'Old Generation'.  
 
@@ -167,17 +167,17 @@ Here live things used by Java runtime. Things like class information is stored h
    Survivor spaces are swapped  
 - Any new object created is allocated to Eden space.
    
-![noImage](./img/MinorGarbageCollection2.png)
+![noImage](./img_metadata/MinorGarbageCollection2.png)
 
-![noImage](./img/MinorGarbageCollection3.png)
+![noImage](./img_metadata/MinorGarbageCollection3.png)
 
-![noImage](./img/MinorGarbageCollection4.png)
+![noImage](./img_metadata/MinorGarbageCollection4.png)
 
-![noImage](./img/MinorGarbageCollection5.png)
+![noImage](./img_metadata/MinorGarbageCollection5.png)
 
-![noImage](./img/MinorGarbageCollection6.png)
+![noImage](./img_metadata/MinorGarbageCollection6.png)
 
-![noImage](./img/MinorGarbageCollection7.png)
+![noImage](./img_metadata/MinorGarbageCollection7.png)
 
 **Major garbage collection**  
 - Triggered when the old/tenured generation is full. 
@@ -191,11 +191,11 @@ When will JVM promote the objects to old generation :question:
 - If JVM has been told to always create objects in old space
     **-XX:+AlwaysTenure** flag to JVM  
     
-![noImage](./img/MajorGarbageCollection3.png)
+![noImage](./img_metadata/MajorGarbageCollection3.png)
 
-![noImage](./img/MajorGarbageCollection4.png)
+![noImage](./img_metadata/MajorGarbageCollection4.png)
 
-![noImage](./img/MajorGarbageCollection5.png)
+![noImage](./img_metadata/MajorGarbageCollection5.png)
 
 
 ### How Allocations Work in the Java Virtual Machine
@@ -203,17 +203,17 @@ How does the allocation of Memory happens in java
 allocate and incr pointer.
 But in multithreaded environment two threads may compete for the same piece of memory. So we'll be needing locks and locks are expensive. So TLABS used..
 
-![noImage](./img/MemoryAllocation1.png)
+![noImage](./img_metadata/MemoryAllocation1.png)
 
-![noImage](./img/MemoryAllocation2.png)
+![noImage](./img_metadata/MemoryAllocation2.png)
 
-![noImage](./img/MemoryAllocation3.png)
+![noImage](./img_metadata/MemoryAllocation3.png)
 
-![noImage](./img/MemoryAllocation4.png)
+![noImage](./img_metadata/MemoryAllocation4.png)
 
-![noImage](./img/MemoryAllocation5.png)
+![noImage](./img_metadata/MemoryAllocation5.png)
 
-![noImage](./img/MemoryAllocation6.png)
+![noImage](./img_metadata/MemoryAllocation6.png)
 
 
 ### What Is a Cardtable and How Is It Used in Garbage Collection
@@ -236,28 +236,28 @@ if refs from old gen to young ones, they are also kept live. Why? Because there 
 
 But how. Does it scans old gen space .. No.. Uses CArd tables.
 
-![noImage](./img/LiveobjectsManagement1.png)
+![noImage](./img_metadata/LiveobjectsManagement1.png)
 
-![noImage](./img/LiveobjectsManagement2.png)
+![noImage](./img_metadata/LiveobjectsManagement2.png)
 
-![noImage](./img/LiveobjectsManagement3.png)
+![noImage](./img_metadata/LiveobjectsManagement3.png)
 
 My understanding is that an entry in the card table is set when an object in young generation is allocated that is referenced by something in the old generation
 When a write to a reference (to an object in young generation) happens, These writes go through something called write barrier.
 And this write barries triggers code in JVM, this code updates an entry in a table called card table
 So minor GC sees card table and load the memory corresponding to references present in card table and follow references in that memory , to mark them in use.
 
-![noImage](./img/LiveobjectsManagement4.png)
+![noImage](./img_metadata/LiveobjectsManagement4.png)
 
-![noImage](./img/LiveobjectsManagement5.png)
+![noImage](./img_metadata/LiveobjectsManagement5.png)
 
-![noImage](./img/LiveobjectsManagement6.png)
+![noImage](./img_metadata/LiveobjectsManagement6.png)
 
-![noImage](./img/LiveobjectsManagement7.png)
+![noImage](./img_metadata/LiveobjectsManagement7.png)
 
-![noImage](./img/LiveobjectsManagement8.png)
+![noImage](./img_metadata/LiveobjectsManagement8.png)
 
-![noImage](./img/LiveobjectsManagement9.png)
+![noImage](./img_metadata/LiveobjectsManagement9.png)
 
 
 ###  Serial Versus Parallel Garbage Collectors
@@ -270,15 +270,15 @@ Where they differ is the amount of concurrency each collector has.
 1) Serial collector
 Single threaded - it means it is a stop the world collector i.e we stop everything and run GC.  
 
-![noImage](./img/SerialCollector.png)
+![noImage](./img_metadata/SerialCollector.png)
 
 2) Parallel collector - Multiple threaded for minor collection and single for major.  So less down time i.e less stop the world time.  
 
-![noImage](./img/parallelCollector.png)
+![noImage](./img_metadata/parallelCollector.png)
 
 3) Parallel old collector - multiple for both.  
 
-![noImage](./img/ParallelOldCollector.png)
+![noImage](./img_metadata/ParallelOldCollector.png)
 
 4) concurrent mark and sweep
 Only collects old space. Only collect during major GC.
@@ -287,15 +287,15 @@ fragments the heap and manages sets of free lists for each of the fragments. It 
 however these are designed to be low latency collectors. So its throughput is much higher with this than parallel and parallel old.
 
 
-![noImage](./img/ConcurrentMarkAndSweep1.png)
+![noImage](./img_metadata/ConcurrentMarkAndSweep1.png)
 
-![noImage](./img/ConcurrentMarkAndSweep%20Before%20GC.png)
+![noImage](./img_metadata/ConcurrentMarkAndSweep%20Before%20GC.png)
 
-![noImage](./img/ConcurrentMarkAndSweep%20After%20GC.png)
+![noImage](./img_metadata/ConcurrentMarkAndSweep%20After%20GC.png)
 
-![noImage](./img/ConcurrentMarkAndSweep%20After%20GC%20CMS.png)
+![noImage](./img_metadata/ConcurrentMarkAndSweep%20After%20GC%20CMS.png)
 
-![noImage](./img/ConcurrentMarkAndSweep2.png)
+![noImage](./img_metadata/ConcurrentMarkAndSweep2.png)
 
 It goes through different phases -
 1) Initial mark - Mark objects taken from root refs. It does not traverse the graph . it only takes direct child of roots, So that we have minimal stop the world time.
@@ -324,30 +324,30 @@ In the Java world, we already know about concurrent collections from the Concurr
 The G1 only stops the application at the beginning of the GC to do some quick bookkeeping before it immediately resumes the application. This phase is called the “Initial Mark”. Then, while the application is executing, the GC will follow all references and mark life objects (“Concurrent Mark” phase). When this is done, the application is suspended again, and a final cleanup is made (“Final Mark” phase) before selecting a few regions and collecting them (“Evacuation” phase). As the evacuation phase is fast, especially for large heaps, the G1 usually outperforms other GCs in terms of suspension time of the executed application.
 
 
-![noImage](./img/G1Collector1.png)
+![noImage](./img_metadata/G1Collector1.png)
 
-![noImage](./img/G1Collector2.png)
+![noImage](./img_metadata/G1Collector2.png)
 
-![noImage](./img/G1Collector3.png)
+![noImage](./img_metadata/G1Collector3.png)
 
-![noImage](./img/G1Collector4.png)
+![noImage](./img_metadata/G1Collector4.png)
 
-![noImage](./img/G1Collector5%20Young%20GC1.png)
+![noImage](./img_metadata/G1Collector5%20Young%20GC1.png)
 
-![noImage](./img/G1Collector5%20Young%20GC2.png)
+![noImage](./img_metadata/G1Collector5%20Young%20GC2.png)
 
-![noImage](./img/G1Collector6%20Old%20GC1.png)
+![noImage](./img_metadata/G1Collector6%20Old%20GC1.png)
 
-![noImage](./img/G1Collector6%20Old%20GC2.png)
+![noImage](./img_metadata/G1Collector6%20Old%20GC2.png)
 
 
 ### Which Collector to use?
 
-![noImage](./img/Differrent%20GCs1.png)
+![noImage](./img_metadata/Differrent%20GCs1.png)
 
-![noImage](./img/WhichCollector1.png)
+![noImage](./img_metadata/WhichCollector1.png)
 
-![noImage](./img/WhichCollector2.png)
+![noImage](./img_metadata/WhichCollector2.png)
 
 
 ## Java Reference Classes
@@ -359,25 +359,25 @@ special because JVM handles them differently and is aware of their existence.
 if coming to out of memory exception then softly referenced objects will be GCied
 Soft reference is able to keep object alive under certain circumstances but weak reference will never keep an object alive. So whenever GC runs, then an object with no strong and Soft reference will be GCied.
 
-![noImage](./img/Java%20references%20intro1.png)
+![noImage](./img_metadata/Java%20references%20intro1.png)
 
-![noImage](./img/Java%20references%20intro2.png)
+![noImage](./img_metadata/Java%20references%20intro2.png)
 
 
 ### How Java References Work
 
 
-![noImage](./img/Using%20Reference%20types1.png)
+![noImage](./img_metadata/Using%20Reference%20types1.png)
 
-![noImage](./img/Using%20Reference%20types2.png)
+![noImage](./img_metadata/Using%20Reference%20types2.png)
 
-![noImage](./img/Using%20Reference%20types3.png)
+![noImage](./img_metadata/Using%20Reference%20types3.png)
 
-![noImage](./img/Using%20Reference%20types4.png)
+![noImage](./img_metadata/Using%20Reference%20types4.png)
 
-![noImage](./img/Using%20Reference%20types5.png)
+![noImage](./img_metadata/Using%20Reference%20types5.png)
 
-![noImage](./img/Using%20Reference%20types6.png)
+![noImage](./img_metadata/Using%20Reference%20types6.png)
 
 
 How these ref work
@@ -410,21 +410,21 @@ So if object has no strong references, weak reference to that object which is ke
 What if we have created HashMap with key as normal object to put meta data ? What disaster have we done????   As we have put key as a strong reference we would not be able to GC the object referenced by key. This is the problem.
 
 
-![noImage](./img/WeakHashMap1.png)
+![noImage](./img_metadata/WeakHashMap1.png)
 
-![noImage](./img/WeakHashMap2.png)
+![noImage](./img_metadata/WeakHashMap2.png)
 
-![noImage](./img/WeakHashMap3.png)
+![noImage](./img_metadata/WeakHashMap3.png)
 
-![noImage](./img/WeakHashMap4.png)
+![noImage](./img_metadata/WeakHashMap4.png)
 
-![noImage](./img/WeakHashMap5.png)
+![noImage](./img_metadata/WeakHashMap5.png)
 
-![noImage](./img/WeakHashMap6.png)
+![noImage](./img_metadata/WeakHashMap6.png)
 
-![noImage](./img/WeakHashMap7.png)
+![noImage](./img_metadata/WeakHashMap7.png)
 
-![noImage](./img/WeakHashMap8.png)
+![noImage](./img_metadata/WeakHashMap8.png)
 
 
 **Soft reference** - used for caching
@@ -446,19 +446,19 @@ Used instead of finalizers which can be expensive as when an object is construct
 
 We have more control over when the final clean up of the object happens. It's not under garbage collector, it more under our control.
 
-![noImage](./img/phantomReference1.png)
+![noImage](./img_metadata/phantomReference1.png)
 
-![noImage](./img/phatomReference2.png)
+![noImage](./img_metadata/phatomReference2.png)
 
-![noImage](./img/phatomReference3.png)
+![noImage](./img_metadata/phatomReference3.png)
 
-![noImage](./img/phatomReference4.png)
+![noImage](./img_metadata/phatomReference4.png)
 
-![noImage](./img/phatomReference5.png)
+![noImage](./img_metadata/phatomReference5.png)
 
-![noImage](./img/phatomReference6.png)
+![noImage](./img_metadata/phatomReference6.png)
 
-![noImage](./img/phatomReference7.png)
+![noImage](./img_metadata/phatomReference7.png)
 
 
 **Using ReferenceQueue**  
@@ -476,19 +476,19 @@ We can do the cleanup mechanim on a background thread using executorService.
 
 Rehesyamain link https://dzone.com/articles/weak-soft-and-phantom-references-in-java-and-why-they-matter
 
-![noImage](./img/Referencequeue1.png)
+![noImage](./img_metadata/Referencequeue1.png)
 
-![noImage](./img/Referencequeue2.png)
+![noImage](./img_metadata/Referencequeue2.png)
 
-![noImage](./img/Referencequeue3.png)
+![noImage](./img_metadata/Referencequeue3.png)
 
-![noImage](./img/Referencequeue4.png)
+![noImage](./img_metadata/Referencequeue4.png)
 
-![noImage](./img/Referencequeue5.png)
+![noImage](./img_metadata/Referencequeue5.png)
 
-![noImage](./img/Referencequeue6.png)
+![noImage](./img_metadata/Referencequeue6.png)
 
-![noImage](./img/Referencequeue7.png)
+![noImage](./img_metadata/Referencequeue7.png)
 
 
 

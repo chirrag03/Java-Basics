@@ -291,7 +291,7 @@ equals - Compare another object to current instance for equality
 
 Some important methods in class java.lang.Object :
 
-![noImage](./img/table_11-1.png)
+![noImage](./img_metadata/table_11-1.png)
 
 
 ### Equality Of Objects

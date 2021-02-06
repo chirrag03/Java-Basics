@@ -7,7 +7,7 @@ Practically speaking, a runtime environment is a piece of software that is desig
 
  The JRE is the on-disk system that takes your Java code, combines it with the necessary libraries, and starts the JVM to execute it.
 
-![noImage](./img/table_11-1.png)
+![noImage](./img_metadata/table_11-1.png)
 
 
 Java code compiles to .class files (having byte code which JVM understands). These classes (i.e .class files) have to be loaded into virtual machine.  
